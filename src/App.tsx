@@ -1331,6 +1331,7 @@ export function App() {
   const [homeFingeringScale, setHomeFingeringScale] = useState(1);
   const [homeGuideScale, setHomeGuideScale] = useState(1);
   const [homeSeekRequest, setHomeSeekRequest] = useState<{ beat: number; nonce: number } | null>(null);
+  const [musicMenuOpen, setMusicMenuOpen] = useState(false);
 
   const songs = catalog?.songs ?? [];
   const selected = songs.find((song) => song.id === selectedId) ?? songs[0] ?? null;
@@ -1389,10 +1390,10 @@ export function App() {
     return songs.filter((song) => song.title.toLowerCase().includes(needle));
   }, [query, songs]);
 
-  useEffect(() => {
-    if (!query.trim() || !filtered.length) return;
-    if (!filtered.some((song) => song.id === selectedId)) setSelectedId(filtered[0].id);
-  }, [filtered, query, selectedId]);
+  function chooseSong(id: string) {
+    setSelectedId(id);
+    setMusicMenuOpen(false);
+  }
 
   if (error) return <main className="state">Erro: {error}</main>;
   if (!catalog) return <main className="state">Carregando repertório...</main>;
@@ -1405,33 +1406,50 @@ export function App() {
           <h1>Leitor de Partituras</h1>
           <p>{readyCount} músicas tocáveis, {transcriptionCount} para transcrever</p>
         </div>
-        <div className="search">
-          <Search size={18} />
-          <input placeholder="Buscar música" value={query} onChange={(event) => setQuery(event.target.value)} />
+        <div className="topbar-actions">
+          <button className="music-menu-button" onClick={() => setMusicMenuOpen(true)} type="button">
+            <ListMusic size={18} />
+            Músicas
+            <span>{selected?.title ?? "Selecionar"}</span>
+          </button>
         </div>
       </header>
 
       <section className="layout">
-        <aside className="song-list">
-          {filtered.map((song) => (
-            <button className={song.id === selectedId ? "song-row selected" : "song-row"} key={song.id} onClick={() => setSelectedId(song.id)}>
-              <FileMusic size={18} />
-              <span>
-                <strong>{song.title}</strong>
-                <small>{songStatusText(song)}</small>
-                <em className={`status-pill ${songStatusClass(song)}`}>{song.status === "ready" ? "tocável" : song.status === "missing_source" ? "sem fonte" : "transcrever"}</em>
-              </span>
-            </button>
-          ))}
-          {catalog.pending.length > 0 && (
-            <details>
-              <summary>Sem fonte</summary>
-              {catalog.pending.map((song) => (
-                <div className="pending" key={song.id}>{song.title}: {song.reason}</div>
-              ))}
-            </details>
-          )}
-        </aside>
+        {musicMenuOpen && (
+          <div className="music-menu-layer" onClick={() => setMusicMenuOpen(false)}>
+            <aside className="song-list music-menu-panel" onClick={(event) => event.stopPropagation()}>
+              <div className="music-menu-head">
+                <strong>Escolher música</strong>
+                <button onClick={() => setMusicMenuOpen(false)} type="button">Fechar</button>
+              </div>
+              <div className="search">
+                <Search size={18} />
+                <input autoFocus placeholder="Buscar música" value={query} onChange={(event) => setQuery(event.target.value)} />
+              </div>
+              <div className="music-menu-list">
+                {filtered.map((song) => (
+                  <button className={song.id === selectedId ? "song-row selected" : "song-row"} key={song.id} onClick={() => chooseSong(song.id)} type="button">
+                    <FileMusic size={18} />
+                    <span>
+                      <strong>{song.title}</strong>
+                      <small>{songStatusText(song)}</small>
+                      <em className={`status-pill ${songStatusClass(song)}`}>{song.status === "ready" ? "tocável" : song.status === "missing_source" ? "sem fonte" : "transcrever"}</em>
+                    </span>
+                  </button>
+                ))}
+              </div>
+              {catalog.pending.length > 0 && (
+                <details>
+                  <summary>Sem fonte</summary>
+                  {catalog.pending.map((song) => (
+                    <div className="pending" key={song.id}>{song.title}: {song.reason}</div>
+                  ))}
+                </details>
+              )}
+            </aside>
+          </div>
+        )}
 
         <section className="workspace">
           {selected && (

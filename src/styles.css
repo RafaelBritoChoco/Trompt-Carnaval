@@ -95,6 +95,34 @@ button:disabled {
   padding: 0 10px;
 }
 
+.topbar-actions {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.music-menu-button {
+  align-items: center;
+  background: #ffffff;
+  border-color: #cfd8e6;
+  display: inline-flex;
+  gap: 8px;
+  min-height: 46px;
+}
+
+.music-menu-button span {
+  border-left: 1px solid #dbe2ea;
+  color: #50617d;
+  font-size: 13px;
+  margin-left: 2px;
+  max-width: 220px;
+  overflow: hidden;
+  padding-left: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .search input,
 .group-create input {
   border: 0;
@@ -106,9 +134,10 @@ button:disabled {
 .layout {
   display: grid;
   gap: 12px;
-  grid-template-columns: clamp(220px, 17vw, 280px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   margin: 0 auto;
   max-width: 1840px;
+  position: relative;
 }
 
 .song-list,
@@ -126,6 +155,46 @@ button:disabled {
   max-height: calc(100vh - 110px);
   overflow: auto;
   padding: 10px;
+}
+
+.music-menu-layer {
+  background: rgba(15, 23, 42, 0.22);
+  inset: 0;
+  position: fixed;
+  z-index: 60;
+}
+
+.music-menu-panel {
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.2);
+  left: 18px;
+  max-height: calc(100vh - 36px);
+  position: fixed;
+  top: 18px;
+  width: min(420px, calc(100vw - 36px));
+}
+
+.music-menu-head {
+  align-items: center;
+  border-bottom: 1px solid #e4e9f0;
+  display: flex;
+  justify-content: space-between;
+  margin: -2px 0 10px;
+  padding-bottom: 10px;
+}
+
+.music-menu-head strong {
+  font-size: 18px;
+}
+
+.music-menu-panel .search {
+  margin-bottom: 10px;
+  min-width: 0;
+}
+
+.music-menu-list {
+  max-height: min(62vh, 620px);
+  overflow: auto;
+  padding-right: 4px;
 }
 
 .groups {
@@ -870,7 +939,7 @@ th {
 
 @media (max-width: 1180px) {
   .layout {
-    grid-template-columns: 260px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .score-toolbar {
@@ -912,8 +981,14 @@ th {
     grid-template-columns: 1fr;
   }
 
-  .song-list {
-    max-height: 280px;
+  .music-menu-panel {
+    inset: 10px;
+    max-height: calc(100vh - 20px);
+    width: auto;
+  }
+
+  .music-menu-list {
+    max-height: calc(100vh - 180px);
   }
 
   .now-playing {
