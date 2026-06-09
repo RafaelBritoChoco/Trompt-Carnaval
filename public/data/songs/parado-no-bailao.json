@@ -1,0 +1,19 @@
+{
+  "id": "parado-no-bailao",
+  "title": "Parado no bailão",
+  "folder": "Parado no bailão",
+  "status": "needs_transcription",
+  "reason": "needs_transcription",
+  "musicxml": null,
+  "audio": null,
+  "fingeringsPdf": null,
+  "sourceImage": "sources/parado-no-bailao.png",
+  "sourcePdf": null,
+  "data": "data/songs/parado-no-bailao.json",
+  "defaultBpm": 100,
+  "trumpetPart": "",
+  "totalMeasures": 0,
+  "totalBeats": 0,
+  "notesCount": 0,
+  "notes": []
+}

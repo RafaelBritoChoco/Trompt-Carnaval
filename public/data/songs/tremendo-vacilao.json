@@ -1,0 +1,19 @@
+{
+  "id": "tremendo-vacilao",
+  "title": "Tremendo Vacilão",
+  "folder": "Tremendo Vacilão",
+  "status": "needs_transcription",
+  "reason": "needs_transcription",
+  "musicxml": null,
+  "audio": null,
+  "fingeringsPdf": null,
+  "sourceImage": "sources/tremendo-vacilao.png",
+  "sourcePdf": null,
+  "data": "data/songs/tremendo-vacilao.json",
+  "defaultBpm": 100,
+  "trumpetPart": "",
+  "totalMeasures": 0,
+  "totalBeats": 0,
+  "notesCount": 0,
+  "notes": []
+}

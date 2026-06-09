@@ -1,0 +1,1016 @@
+{
+  "id": "verdinha",
+  "title": "Verdinha",
+  "folder": "Verdinha",
+  "status": "ready",
+  "musicxml": "scores/verdinha.musicxml",
+  "audio": "audio/verdinha.wav",
+  "fingeringsPdf": "fingerings/verdinha-trompete-fingerings.pdf",
+  "data": "data/songs/verdinha.json",
+  "defaultBpm": 100,
+  "trumpetPart": "Tpt. in Bb Tpt. in Bb",
+  "totalMeasures": 11,
+  "totalBeats": 44.0,
+  "notesCount": 75,
+  "notes": [
+    {
+      "index": 0,
+      "measure": 1,
+      "beat": 1.0,
+      "absBeat": 0.0,
+      "durationBeats": 0.5,
+      "written": "Bb4",
+      "labelPt": "Sib4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 1,
+      "measure": 1,
+      "beat": 1.5,
+      "absBeat": 0.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 2,
+      "measure": 1,
+      "beat": 2.0,
+      "absBeat": 1.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 3,
+      "measure": 1,
+      "beat": 2.5,
+      "absBeat": 1.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 4,
+      "measure": 1,
+      "beat": 3.0,
+      "absBeat": 2.0,
+      "durationBeats": 1.0,
+      "written": "Gb4",
+      "labelPt": "Solb4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 5,
+      "measure": 1,
+      "beat": 4.0,
+      "absBeat": 3.0,
+      "durationBeats": 1.0,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 6,
+      "measure": 2,
+      "beat": 1.0,
+      "absBeat": 4.0,
+      "durationBeats": 0.5,
+      "written": "Bb4",
+      "labelPt": "Sib4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 7,
+      "measure": 2,
+      "beat": 1.5,
+      "absBeat": 4.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 8,
+      "measure": 2,
+      "beat": 2.0,
+      "absBeat": 5.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 9,
+      "measure": 2,
+      "beat": 2.5,
+      "absBeat": 5.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 10,
+      "measure": 2,
+      "beat": 3.0,
+      "absBeat": 6.0,
+      "durationBeats": 1.0,
+      "written": "Gb4",
+      "labelPt": "Solb4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 11,
+      "measure": 2,
+      "beat": 4.0,
+      "absBeat": 7.0,
+      "durationBeats": 1.0,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 12,
+      "measure": 3,
+      "beat": 1.0,
+      "absBeat": 8.0,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 13,
+      "measure": 3,
+      "beat": 1.5,
+      "absBeat": 8.5,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 14,
+      "measure": 3,
+      "beat": 2.0,
+      "absBeat": 9.0,
+      "durationBeats": 0.5,
+      "written": "Db4",
+      "labelPt": "Reb4",
+      "fingering": [
+        "1",
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 15,
+      "measure": 3,
+      "beat": 2.5,
+      "absBeat": 9.5,
+      "durationBeats": 0.5,
+      "written": "Eb4",
+      "labelPt": "Mib4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 16,
+      "measure": 3,
+      "beat": 3.0,
+      "absBeat": 10.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 17,
+      "measure": 3,
+      "beat": 3.5,
+      "absBeat": 10.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 18,
+      "measure": 3,
+      "beat": 4.0,
+      "absBeat": 11.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 19,
+      "measure": 3,
+      "beat": 4.5,
+      "absBeat": 11.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 20,
+      "measure": 4,
+      "beat": 1.0,
+      "absBeat": 12.0,
+      "durationBeats": 0.5,
+      "written": "Eb4",
+      "labelPt": "Mib4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 21,
+      "measure": 4,
+      "beat": 1.5,
+      "absBeat": 12.5,
+      "durationBeats": 0.5,
+      "written": "Db4",
+      "labelPt": "Reb4",
+      "fingering": [
+        "1",
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 22,
+      "measure": 4,
+      "beat": 2.0,
+      "absBeat": 13.0,
+      "durationBeats": 0.5,
+      "written": "C4",
+      "labelPt": "Do4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 23,
+      "measure": 4,
+      "beat": 2.5,
+      "absBeat": 13.5,
+      "durationBeats": 0.5,
+      "written": "Db4",
+      "labelPt": "Reb4",
+      "fingering": [
+        "1",
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 24,
+      "measure": 4,
+      "beat": 3.0,
+      "absBeat": 14.0,
+      "durationBeats": 1.0,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 25,
+      "measure": 5,
+      "beat": 1.0,
+      "absBeat": 16.0,
+      "durationBeats": 0.5,
+      "written": "Eb4",
+      "labelPt": "Mib4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 26,
+      "measure": 5,
+      "beat": 1.5,
+      "absBeat": 16.5,
+      "durationBeats": 0.5,
+      "written": "Db4",
+      "labelPt": "Reb4",
+      "fingering": [
+        "1",
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 27,
+      "measure": 5,
+      "beat": 2.0,
+      "absBeat": 17.0,
+      "durationBeats": 0.5,
+      "written": "C4",
+      "labelPt": "Do4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 28,
+      "measure": 5,
+      "beat": 2.5,
+      "absBeat": 17.5,
+      "durationBeats": 0.5,
+      "written": "Db4",
+      "labelPt": "Reb4",
+      "fingering": [
+        "1",
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 29,
+      "measure": 5,
+      "beat": 3.0,
+      "absBeat": 18.0,
+      "durationBeats": 1.0,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 30,
+      "measure": 5,
+      "beat": 4.0,
+      "absBeat": 19.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 31,
+      "measure": 5,
+      "beat": 4.5,
+      "absBeat": 19.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 32,
+      "measure": 6,
+      "beat": 1.0,
+      "absBeat": 20.0,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 33,
+      "measure": 6,
+      "beat": 1.5,
+      "absBeat": 20.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 34,
+      "measure": 6,
+      "beat": 2.0,
+      "absBeat": 21.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 35,
+      "measure": 6,
+      "beat": 2.5,
+      "absBeat": 21.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 36,
+      "measure": 6,
+      "beat": 3.0,
+      "absBeat": 22.0,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 37,
+      "measure": 6,
+      "beat": 4.0,
+      "absBeat": 23.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 38,
+      "measure": 6,
+      "beat": 4.5,
+      "absBeat": 23.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 39,
+      "measure": 7,
+      "beat": 1.0,
+      "absBeat": 24.0,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 40,
+      "measure": 7,
+      "beat": 1.5,
+      "absBeat": 24.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 41,
+      "measure": 7,
+      "beat": 2.0,
+      "absBeat": 25.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 42,
+      "measure": 7,
+      "beat": 2.5,
+      "absBeat": 25.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 43,
+      "measure": 7,
+      "beat": 3.0,
+      "absBeat": 26.0,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 44,
+      "measure": 7,
+      "beat": 4.0,
+      "absBeat": 27.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 45,
+      "measure": 7,
+      "beat": 4.5,
+      "absBeat": 27.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 46,
+      "measure": 8,
+      "beat": 1.0,
+      "absBeat": 28.0,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 47,
+      "measure": 8,
+      "beat": 1.5,
+      "absBeat": 28.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 48,
+      "measure": 8,
+      "beat": 2.0,
+      "absBeat": 29.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 49,
+      "measure": 8,
+      "beat": 2.5,
+      "absBeat": 29.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 50,
+      "measure": 8,
+      "beat": 3.0,
+      "absBeat": 30.0,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 51,
+      "measure": 8,
+      "beat": 3.5,
+      "absBeat": 30.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 52,
+      "measure": 8,
+      "beat": 4.0,
+      "absBeat": 31.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 53,
+      "measure": 8,
+      "beat": 4.5,
+      "absBeat": 31.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 54,
+      "measure": 9,
+      "beat": 1.0,
+      "absBeat": 32.0,
+      "durationBeats": 0.5,
+      "written": "Gb4",
+      "labelPt": "Solb4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 55,
+      "measure": 9,
+      "beat": 1.5,
+      "absBeat": 32.5,
+      "durationBeats": 0.5,
+      "written": "Gb4",
+      "labelPt": "Solb4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 56,
+      "measure": 9,
+      "beat": 2.0,
+      "absBeat": 33.0,
+      "durationBeats": 0.5,
+      "written": "Ab4",
+      "labelPt": "Lab4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 57,
+      "measure": 9,
+      "beat": 2.5,
+      "absBeat": 33.5,
+      "durationBeats": 0.5,
+      "written": "Gb4",
+      "labelPt": "Solb4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 58,
+      "measure": 9,
+      "beat": 3.0,
+      "absBeat": 34.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 59,
+      "measure": 9,
+      "beat": 4.0,
+      "absBeat": 35.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 60,
+      "measure": 9,
+      "beat": 4.5,
+      "absBeat": 35.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 61,
+      "measure": 10,
+      "beat": 1.0,
+      "absBeat": 36.0,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 62,
+      "measure": 10,
+      "beat": 1.5,
+      "absBeat": 36.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 63,
+      "measure": 10,
+      "beat": 2.0,
+      "absBeat": 37.0,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 64,
+      "measure": 10,
+      "beat": 2.5,
+      "absBeat": 37.5,
+      "durationBeats": 0.5,
+      "written": "F4",
+      "labelPt": "Fa4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 65,
+      "measure": 10,
+      "beat": 3.0,
+      "absBeat": 38.0,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 66,
+      "measure": 10,
+      "beat": 4.0,
+      "absBeat": 39.0,
+      "durationBeats": 0.5,
+      "written": "Eb4",
+      "labelPt": "Mib4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 67,
+      "measure": 10,
+      "beat": 4.5,
+      "absBeat": 39.5,
+      "durationBeats": 0.5,
+      "written": "Db4",
+      "labelPt": "Reb4",
+      "fingering": [
+        "1",
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 68,
+      "measure": 11,
+      "beat": 1.0,
+      "absBeat": 40.0,
+      "durationBeats": 0.5,
+      "written": "Eb4",
+      "labelPt": "Mib4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 69,
+      "measure": 11,
+      "beat": 1.5,
+      "absBeat": 40.5,
+      "durationBeats": 0.5,
+      "written": "Db4",
+      "labelPt": "Reb4",
+      "fingering": [
+        "1",
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 70,
+      "measure": 11,
+      "beat": 2.0,
+      "absBeat": 41.0,
+      "durationBeats": 0.5,
+      "written": "Db4",
+      "labelPt": "Reb4",
+      "fingering": [
+        "1",
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 71,
+      "measure": 11,
+      "beat": 2.5,
+      "absBeat": 41.5,
+      "durationBeats": 0.5,
+      "written": "C4",
+      "labelPt": "Do4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 72,
+      "measure": 11,
+      "beat": 3.0,
+      "absBeat": 42.0,
+      "durationBeats": 0.5,
+      "written": "Db4",
+      "labelPt": "Reb4",
+      "fingering": [
+        "1",
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 73,
+      "measure": 11,
+      "beat": 3.5,
+      "absBeat": 42.5,
+      "durationBeats": 0.5,
+      "written": "C4",
+      "labelPt": "Do4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 74,
+      "measure": 11,
+      "beat": 4.0,
+      "absBeat": 43.0,
+      "durationBeats": 0.5,
+      "written": "Bb3",
+      "labelPt": "Sib3",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "ela-so-pensa-em-beijar",
+  "title": "Ela só pensa em beijar",
+  "folder": "Ela só pensa em beijar",
+  "status": "needs_transcription",
+  "reason": "needs_transcription",
+  "musicxml": null,
+  "audio": null,
+  "fingeringsPdf": null,
+  "sourceImage": "sources/ela-so-pensa-em-beijar.png",
+  "sourcePdf": null,
+  "data": "data/songs/ela-so-pensa-em-beijar.json",
+  "defaultBpm": 100,
+  "trumpetPart": "",
+  "totalMeasures": 0,
+  "totalBeats": 0,
+  "notesCount": 0,
+  "notes": []
+}

@@ -1,0 +1,19 @@
+{
+  "id": "vai-malandra",
+  "title": "Vai malandra",
+  "folder": "Vai malandra",
+  "status": "needs_transcription",
+  "reason": "needs_transcription",
+  "musicxml": null,
+  "audio": null,
+  "fingeringsPdf": null,
+  "sourceImage": "sources/vai-malandra.png",
+  "sourcePdf": null,
+  "data": "data/songs/vai-malandra.json",
+  "defaultBpm": 100,
+  "trumpetPart": "",
+  "totalMeasures": 0,
+  "totalBeats": 0,
+  "notesCount": 0,
+  "notes": []
+}

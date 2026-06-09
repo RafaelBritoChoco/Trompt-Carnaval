@@ -1,0 +1,19 @@
+{
+  "id": "tu-ta-na-gaiola",
+  "title": "Tu ta na gaiola",
+  "folder": "Tu ta na gaiola",
+  "status": "needs_transcription",
+  "reason": "needs_transcription",
+  "musicxml": null,
+  "audio": null,
+  "fingeringsPdf": null,
+  "sourceImage": "sources/tu-ta-na-gaiola.png",
+  "sourcePdf": null,
+  "data": "data/songs/tu-ta-na-gaiola.json",
+  "defaultBpm": 100,
+  "trumpetPart": "",
+  "totalMeasures": 0,
+  "totalBeats": 0,
+  "notesCount": 0,
+  "notes": []
+}

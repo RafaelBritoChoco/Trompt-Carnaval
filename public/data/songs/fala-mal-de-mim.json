@@ -1,0 +1,449 @@
+{
+  "id": "fala-mal-de-mim",
+  "title": "Fala Mal de Mim",
+  "folder": "Fala Mal de Mim",
+  "status": "ready",
+  "musicxml": "scores/fala-mal-de-mim.musicxml",
+  "audio": "audio/fala-mal-de-mim.wav",
+  "fingeringsPdf": "fingerings/fala-mal-de-mim-trompete-fingerings.pdf",
+  "data": "data/songs/fala-mal-de-mim.json",
+  "defaultBpm": 100,
+  "trumpetPart": "Trumpet in Bb Tpt. in Bb",
+  "totalMeasures": 5,
+  "totalBeats": 20.0,
+  "notesCount": 32,
+  "notes": [
+    {
+      "index": 0,
+      "measure": 1,
+      "beat": 1.0,
+      "absBeat": 0.0,
+      "durationBeats": 0.5,
+      "written": "F#4",
+      "labelPt": "Fa#4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 1,
+      "measure": 1,
+      "beat": 1.5,
+      "absBeat": 0.5,
+      "durationBeats": 0.5,
+      "written": "F#4",
+      "labelPt": "Fa#4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 2,
+      "measure": 1,
+      "beat": 2.0,
+      "absBeat": 1.0,
+      "durationBeats": 0.5,
+      "written": "F#4",
+      "labelPt": "Fa#4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 3,
+      "measure": 1,
+      "beat": 2.5,
+      "absBeat": 1.5,
+      "durationBeats": 0.5,
+      "written": "G#4",
+      "labelPt": "Sol#4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 4,
+      "measure": 2,
+      "beat": 1.0,
+      "absBeat": 4.0,
+      "durationBeats": 0.5,
+      "written": "A#4",
+      "labelPt": "La#4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 5,
+      "measure": 2,
+      "beat": 1.5,
+      "absBeat": 4.5,
+      "durationBeats": 0.5,
+      "written": "A#4",
+      "labelPt": "La#4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 6,
+      "measure": 2,
+      "beat": 2.0,
+      "absBeat": 5.0,
+      "durationBeats": 0.5,
+      "written": "A#4",
+      "labelPt": "La#4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 7,
+      "measure": 2,
+      "beat": 2.5,
+      "absBeat": 5.5,
+      "durationBeats": 0.5,
+      "written": "G#4",
+      "labelPt": "Sol#4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 8,
+      "measure": 2,
+      "beat": 3.0,
+      "absBeat": 6.0,
+      "durationBeats": 0.5,
+      "written": "G#4",
+      "labelPt": "Sol#4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 9,
+      "measure": 2,
+      "beat": 3.5,
+      "absBeat": 6.5,
+      "durationBeats": 0.5,
+      "written": "A#4",
+      "labelPt": "La#4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 10,
+      "measure": 2,
+      "beat": 4.0,
+      "absBeat": 7.0,
+      "durationBeats": 0.5,
+      "written": "G#4",
+      "labelPt": "Sol#4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 11,
+      "measure": 2,
+      "beat": 4.5,
+      "absBeat": 7.5,
+      "durationBeats": 0.5,
+      "written": "F#4",
+      "labelPt": "Fa#4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 12,
+      "measure": 3,
+      "beat": 1.0,
+      "absBeat": 8.0,
+      "durationBeats": 0.5,
+      "written": "D#4",
+      "labelPt": "Re#4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 13,
+      "measure": 3,
+      "beat": 1.5,
+      "absBeat": 8.5,
+      "durationBeats": 0.5,
+      "written": "D#4",
+      "labelPt": "Re#4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 14,
+      "measure": 3,
+      "beat": 2.0,
+      "absBeat": 9.0,
+      "durationBeats": 0.5,
+      "written": "C#5",
+      "labelPt": "Do#5",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 15,
+      "measure": 3,
+      "beat": 2.5,
+      "absBeat": 9.5,
+      "durationBeats": 0.5,
+      "written": "A#4",
+      "labelPt": "La#4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 16,
+      "measure": 3,
+      "beat": 3.0,
+      "absBeat": 10.0,
+      "durationBeats": 0.5,
+      "written": "C#5",
+      "labelPt": "Do#5",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 17,
+      "measure": 3,
+      "beat": 3.5,
+      "absBeat": 10.5,
+      "durationBeats": 0.5,
+      "written": "A#4",
+      "labelPt": "La#4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 18,
+      "measure": 3,
+      "beat": 4.0,
+      "absBeat": 11.0,
+      "durationBeats": 0.5,
+      "written": "C#5",
+      "labelPt": "Do#5",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 19,
+      "measure": 3,
+      "beat": 4.5,
+      "absBeat": 11.5,
+      "durationBeats": 0.5,
+      "written": "A#4",
+      "labelPt": "La#4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 20,
+      "measure": 4,
+      "beat": 1.0,
+      "absBeat": 12.0,
+      "durationBeats": 0.5,
+      "written": "C#5",
+      "labelPt": "Do#5",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 21,
+      "measure": 4,
+      "beat": 1.5,
+      "absBeat": 12.5,
+      "durationBeats": 0.5,
+      "written": "A#4",
+      "labelPt": "La#4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 22,
+      "measure": 4,
+      "beat": 3.0,
+      "absBeat": 14.0,
+      "durationBeats": 0.5,
+      "written": "G#4",
+      "labelPt": "Sol#4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 23,
+      "measure": 4,
+      "beat": 3.5,
+      "absBeat": 14.5,
+      "durationBeats": 0.5,
+      "written": "A#4",
+      "labelPt": "La#4",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 24,
+      "measure": 4,
+      "beat": 4.0,
+      "absBeat": 15.0,
+      "durationBeats": 0.5,
+      "written": "G#4",
+      "labelPt": "Sol#4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 25,
+      "measure": 4,
+      "beat": 4.5,
+      "absBeat": 15.5,
+      "durationBeats": 0.5,
+      "written": "F#4",
+      "labelPt": "Fa#4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 26,
+      "measure": 5,
+      "beat": 1.0,
+      "absBeat": 16.0,
+      "durationBeats": 1.0,
+      "written": "D#4",
+      "labelPt": "Re#4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 27,
+      "measure": 5,
+      "beat": 2.0,
+      "absBeat": 17.0,
+      "durationBeats": 1.0,
+      "written": "C#4",
+      "labelPt": "Do#4",
+      "fingering": [
+        "1",
+        "2",
+        "3"
+      ],
+      "tie": null
+    },
+    {
+      "index": 28,
+      "measure": 5,
+      "beat": 3.0,
+      "absBeat": 18.0,
+      "durationBeats": 0.5,
+      "written": "F#4",
+      "labelPt": "Fa#4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 29,
+      "measure": 5,
+      "beat": 3.5,
+      "absBeat": 18.5,
+      "durationBeats": 0.5,
+      "written": "F#4",
+      "labelPt": "Fa#4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 30,
+      "measure": 5,
+      "beat": 4.0,
+      "absBeat": 19.0,
+      "durationBeats": 0.5,
+      "written": "F#4",
+      "labelPt": "Fa#4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 31,
+      "measure": 5,
+      "beat": 4.5,
+      "absBeat": 19.5,
+      "durationBeats": 0.5,
+      "written": "G#4",
+      "labelPt": "Sol#4",
+      "fingering": [
+        "2",
+        "3"
+      ],
+      "tie": null
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "leitor-de-partituras",
+  "title": "Leitor de Partituras",
+  "folder": "Leitor de Partituras",
+  "status": "missing_source",
+  "reason": "missing_source",
+  "musicxml": null,
+  "audio": null,
+  "fingeringsPdf": null,
+  "sourceImage": null,
+  "sourcePdf": null,
+  "data": "data/songs/leitor-de-partituras.json",
+  "defaultBpm": 100,
+  "trumpetPart": "",
+  "totalMeasures": 0,
+  "totalBeats": 0,
+  "notesCount": 0,
+  "notes": []
+}

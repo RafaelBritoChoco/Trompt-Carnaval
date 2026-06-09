@@ -1,0 +1,19 @@
+{
+  "id": "vira-de-ladinho",
+  "title": "Vira de Ladinho",
+  "folder": "Vira de Ladinho",
+  "status": "needs_transcription",
+  "reason": "needs_musicxml_export",
+  "musicxml": null,
+  "audio": "audio/vira-de-ladinho.mp3",
+  "fingeringsPdf": null,
+  "sourceImage": null,
+  "sourcePdf": "sources/vira-de-ladinho.pdf",
+  "data": "data/songs/vira-de-ladinho.json",
+  "defaultBpm": 100,
+  "trumpetPart": "",
+  "totalMeasures": 0,
+  "totalBeats": 0,
+  "notesCount": 0,
+  "notes": []
+}

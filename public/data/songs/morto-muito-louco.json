@@ -1,0 +1,19 @@
+{
+  "id": "morto-muito-louco",
+  "title": "Morto muito louco",
+  "folder": "Morto muito louco",
+  "status": "needs_transcription",
+  "reason": "needs_transcription",
+  "musicxml": null,
+  "audio": null,
+  "fingeringsPdf": null,
+  "sourceImage": "sources/morto-muito-louco.png",
+  "sourcePdf": null,
+  "data": "data/songs/morto-muito-louco.json",
+  "defaultBpm": 100,
+  "trumpetPart": "",
+  "totalMeasures": 0,
+  "totalBeats": 0,
+  "notesCount": 0,
+  "notes": []
+}

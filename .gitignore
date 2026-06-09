@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.playwright-cli/
+
+.env
+.env.*
+!.env.example
+
+*.log
+vite.out.log
+vite.err.log
+__pycache__/
+*.pyc
+
+.DS_Store
+Thumbs.db
