@@ -2,18 +2,352 @@
   "id": "morto-muito-louco",
   "title": "Morto muito louco",
   "folder": "Morto muito louco",
-  "status": "needs_transcription",
-  "reason": "needs_transcription",
-  "musicxml": null,
+  "status": "ready",
+  "musicxml": "scores/morto-muito-louco.musicxml",
   "audio": null,
   "fingeringsPdf": null,
   "sourceImage": "sources/morto-muito-louco.png",
   "sourcePdf": null,
   "data": "data/songs/morto-muito-louco.json",
-  "defaultBpm": 100,
-  "trumpetPart": "",
-  "totalMeasures": 0,
-  "totalBeats": 0,
-  "notesCount": 0,
-  "notes": []
+  "defaultBpm": 120,
+  "trumpetPart": "Trumpet in Bb",
+  "totalMeasures": 6,
+  "totalBeats": 24.0,
+  "notesCount": 25,
+  "notes": [
+    {
+      "index": 0,
+      "measure": 1,
+      "beat": 3.5,
+      "absBeat": 2.5,
+      "durationBeats": 0.5,
+      "written": "G4",
+      "labelPt": "Sol4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 1,
+      "measure": 1,
+      "beat": 4.0,
+      "absBeat": 3.0,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 2,
+      "measure": 1,
+      "beat": 4.5,
+      "absBeat": 3.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 3,
+      "measure": 2,
+      "beat": 1.0,
+      "absBeat": 4.0,
+      "durationBeats": 0.5,
+      "written": "C5",
+      "labelPt": "Do5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 4,
+      "measure": 2,
+      "beat": 1.75,
+      "absBeat": 4.75,
+      "durationBeats": 0.5,
+      "written": "C5",
+      "labelPt": "Do5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 5,
+      "measure": 2,
+      "beat": 2.5,
+      "absBeat": 5.5,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 6,
+      "measure": 2,
+      "beat": 3.5,
+      "absBeat": 6.5,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 7,
+      "measure": 2,
+      "beat": 4.5,
+      "absBeat": 7.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 8,
+      "measure": 3,
+      "beat": 1.5,
+      "absBeat": 8.5,
+      "durationBeats": 0.5,
+      "written": "G4",
+      "labelPt": "Sol4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 9,
+      "measure": 3,
+      "beat": 2.0,
+      "absBeat": 9.0,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 10,
+      "measure": 3,
+      "beat": 2.5,
+      "absBeat": 9.5,
+      "durationBeats": 0.5,
+      "written": "G4",
+      "labelPt": "Sol4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 11,
+      "measure": 3,
+      "beat": 3.0,
+      "absBeat": 10.0,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 12,
+      "measure": 3,
+      "beat": 3.5,
+      "absBeat": 10.5,
+      "durationBeats": 0.5,
+      "written": "G4",
+      "labelPt": "Sol4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 13,
+      "measure": 3,
+      "beat": 4.0,
+      "absBeat": 11.0,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 14,
+      "measure": 3,
+      "beat": 4.5,
+      "absBeat": 11.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 15,
+      "measure": 4,
+      "beat": 1.0,
+      "absBeat": 12.0,
+      "durationBeats": 0.5,
+      "written": "C5",
+      "labelPt": "Do5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 16,
+      "measure": 4,
+      "beat": 1.75,
+      "absBeat": 12.75,
+      "durationBeats": 0.5,
+      "written": "C5",
+      "labelPt": "Do5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 17,
+      "measure": 4,
+      "beat": 2.5,
+      "absBeat": 13.5,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 18,
+      "measure": 4,
+      "beat": 3.5,
+      "absBeat": 14.5,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 19,
+      "measure": 4,
+      "beat": 4.5,
+      "absBeat": 15.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": "start"
+    },
+    {
+      "index": 20,
+      "measure": 5,
+      "beat": 1.0,
+      "absBeat": 16.0,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": "stop"
+    },
+    {
+      "index": 21,
+      "measure": 5,
+      "beat": 3.5,
+      "absBeat": 18.5,
+      "durationBeats": 0.5,
+      "written": "G4",
+      "labelPt": "Sol4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 22,
+      "measure": 5,
+      "beat": 4.0,
+      "absBeat": 19.0,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 23,
+      "measure": 5,
+      "beat": 4.5,
+      "absBeat": 19.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 24,
+      "measure": 6,
+      "beat": 1.0,
+      "absBeat": 20.0,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    }
+  ]
 }

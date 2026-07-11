@@ -1,21 +1,1632 @@
-﻿{
-    "id":  "malandramente",
-    "title":  "Malandramente",
-    "folder":  "Malandramente-Sax Alto.pdf",
-    "status":  "needs_transcription",
-    "reason":  "fonte disponivel: Sax Alto; precisa adaptar/transcrever para trompete",
-    "musicxml":  null,
-    "audio":  null,
-    "fingeringsPdf":  null,
-    "sourceImage":  null,
-    "sourcePdf":  "sources/malandramente-sax-alto.pdf",
-    "data":  "data/songs/malandramente.json",
-    "defaultBpm":  100,
-    "trumpetPart":  "",
-    "totalMeasures":  0,
-    "totalBeats":  0,
-    "notesCount":  0,
-    "notes":  [
-
-              ]
+{
+  "id": "malandramente",
+  "title": "Malandramente",
+  "folder": "Malandramente-Sax Alto.pdf",
+  "status": "ready",
+  "musicxml": "scores/malandramente.musicxml",
+  "audio": null,
+  "fingeringsPdf": null,
+  "sourceImage": null,
+  "sourcePdf": "sources/malandramente-sax-alto.pdf",
+  "data": "data/songs/malandramente.json",
+  "defaultBpm": 130,
+  "trumpetPart": "Trumpet in Bb",
+  "totalMeasures": 19,
+  "totalBeats": 76.0,
+  "notesCount": 123,
+  "notes": [
+    {
+      "index": 0,
+      "measure": 1,
+      "beat": 1.0,
+      "absBeat": 0.0,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 1,
+      "measure": 1,
+      "beat": 1.5,
+      "absBeat": 0.5,
+      "durationBeats": 1.0,
+      "written": "G5",
+      "labelPt": "Sol5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 2,
+      "measure": 1,
+      "beat": 2.5,
+      "absBeat": 1.5,
+      "durationBeats": 0.5,
+      "written": "F#5",
+      "labelPt": "Fa#5",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 3,
+      "measure": 1,
+      "beat": 3.0,
+      "absBeat": 2.0,
+      "durationBeats": 2.0,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": "start"
+    },
+    {
+      "index": 4,
+      "measure": 2,
+      "beat": 1.0,
+      "absBeat": 4.0,
+      "durationBeats": 0.5,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": "stop"
+    },
+    {
+      "index": 5,
+      "measure": 2,
+      "beat": 1.75,
+      "absBeat": 4.75,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 6,
+      "measure": 2,
+      "beat": 2.0,
+      "absBeat": 5.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 7,
+      "measure": 2,
+      "beat": 2.25,
+      "absBeat": 5.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 8,
+      "measure": 2,
+      "beat": 2.5,
+      "absBeat": 5.5,
+      "durationBeats": 0.25,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 9,
+      "measure": 2,
+      "beat": 2.75,
+      "absBeat": 5.75,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 10,
+      "measure": 2,
+      "beat": 3.0,
+      "absBeat": 6.0,
+      "durationBeats": 1.0,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": "start"
+    },
+    {
+      "index": 11,
+      "measure": 2,
+      "beat": 4.0,
+      "absBeat": 7.0,
+      "durationBeats": 1.0,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": "stop"
+    },
+    {
+      "index": 12,
+      "measure": 3,
+      "beat": 1.0,
+      "absBeat": 8.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 13,
+      "measure": 3,
+      "beat": 1.25,
+      "absBeat": 8.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 14,
+      "measure": 3,
+      "beat": 1.5,
+      "absBeat": 8.5,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 15,
+      "measure": 3,
+      "beat": 1.75,
+      "absBeat": 8.75,
+      "durationBeats": 0.25,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 16,
+      "measure": 3,
+      "beat": 2.0,
+      "absBeat": 9.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 17,
+      "measure": 3,
+      "beat": 2.25,
+      "absBeat": 9.25,
+      "durationBeats": 1.0,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": "start"
+    },
+    {
+      "index": 18,
+      "measure": 3,
+      "beat": 3.25,
+      "absBeat": 10.25,
+      "durationBeats": 1.0,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": "stop"
+    },
+    {
+      "index": 19,
+      "measure": 3,
+      "beat": 4.25,
+      "absBeat": 11.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 20,
+      "measure": 3,
+      "beat": 4.5,
+      "absBeat": 11.5,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 21,
+      "measure": 3,
+      "beat": 4.75,
+      "absBeat": 11.75,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 22,
+      "measure": 4,
+      "beat": 1.0,
+      "absBeat": 12.0,
+      "durationBeats": 0.25,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 23,
+      "measure": 4,
+      "beat": 1.25,
+      "absBeat": 12.25,
+      "durationBeats": 0.25,
+      "written": "G4",
+      "labelPt": "Sol4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 24,
+      "measure": 4,
+      "beat": 1.5,
+      "absBeat": 12.5,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 25,
+      "measure": 4,
+      "beat": 3.0,
+      "absBeat": 14.0,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 26,
+      "measure": 4,
+      "beat": 3.5,
+      "absBeat": 14.5,
+      "durationBeats": 1.0,
+      "written": "G5",
+      "labelPt": "Sol5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 27,
+      "measure": 4,
+      "beat": 4.5,
+      "absBeat": 15.5,
+      "durationBeats": 0.5,
+      "written": "F#5",
+      "labelPt": "Fa#5",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 28,
+      "measure": 5,
+      "beat": 1.0,
+      "absBeat": 16.0,
+      "durationBeats": 2.0,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": "start"
+    },
+    {
+      "index": 29,
+      "measure": 5,
+      "beat": 3.0,
+      "absBeat": 18.0,
+      "durationBeats": 0.5,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": "stop"
+    },
+    {
+      "index": 30,
+      "measure": 5,
+      "beat": 3.75,
+      "absBeat": 18.75,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 31,
+      "measure": 5,
+      "beat": 4.0,
+      "absBeat": 19.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 32,
+      "measure": 5,
+      "beat": 4.25,
+      "absBeat": 19.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 33,
+      "measure": 5,
+      "beat": 4.5,
+      "absBeat": 19.5,
+      "durationBeats": 0.25,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 34,
+      "measure": 5,
+      "beat": 4.75,
+      "absBeat": 19.75,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 35,
+      "measure": 6,
+      "beat": 1.0,
+      "absBeat": 20.0,
+      "durationBeats": 1.0,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": "start"
+    },
+    {
+      "index": 36,
+      "measure": 6,
+      "beat": 2.0,
+      "absBeat": 21.0,
+      "durationBeats": 1.0,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": "stop"
+    },
+    {
+      "index": 37,
+      "measure": 6,
+      "beat": 3.0,
+      "absBeat": 22.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 38,
+      "measure": 6,
+      "beat": 3.25,
+      "absBeat": 22.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 39,
+      "measure": 6,
+      "beat": 3.5,
+      "absBeat": 22.5,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 40,
+      "measure": 6,
+      "beat": 3.75,
+      "absBeat": 22.75,
+      "durationBeats": 0.25,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 41,
+      "measure": 6,
+      "beat": 4.0,
+      "absBeat": 23.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 42,
+      "measure": 6,
+      "beat": 4.25,
+      "absBeat": 23.25,
+      "durationBeats": 0.25,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": "start"
+    },
+    {
+      "index": 43,
+      "measure": 6,
+      "beat": 4.5,
+      "absBeat": 23.5,
+      "durationBeats": 0.5,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": "start"
+    },
+    {
+      "index": 44,
+      "measure": 7,
+      "beat": 1.0,
+      "absBeat": 24.0,
+      "durationBeats": 0.75,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": "stop"
+    },
+    {
+      "index": 45,
+      "measure": 7,
+      "beat": 1.75,
+      "absBeat": 24.75,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 46,
+      "measure": 7,
+      "beat": 2.0,
+      "absBeat": 25.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 47,
+      "measure": 7,
+      "beat": 2.25,
+      "absBeat": 25.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 48,
+      "measure": 7,
+      "beat": 2.5,
+      "absBeat": 25.5,
+      "durationBeats": 0.25,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 49,
+      "measure": 7,
+      "beat": 2.75,
+      "absBeat": 25.75,
+      "durationBeats": 0.25,
+      "written": "G4",
+      "labelPt": "Sol4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 50,
+      "measure": 7,
+      "beat": 3.0,
+      "absBeat": 26.0,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 51,
+      "measure": 7,
+      "beat": 4.5,
+      "absBeat": 27.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 52,
+      "measure": 8,
+      "beat": 1.0,
+      "absBeat": 28.0,
+      "durationBeats": 1.0,
+      "written": "G5",
+      "labelPt": "Sol5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 53,
+      "measure": 8,
+      "beat": 2.0,
+      "absBeat": 29.0,
+      "durationBeats": 0.5,
+      "written": "F#5",
+      "labelPt": "Fa#5",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 54,
+      "measure": 8,
+      "beat": 2.5,
+      "absBeat": 29.5,
+      "durationBeats": 2.0,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": "start"
+    },
+    {
+      "index": 55,
+      "measure": 8,
+      "beat": 4.5,
+      "absBeat": 31.5,
+      "durationBeats": 0.5,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": "stop"
+    },
+    {
+      "index": 56,
+      "measure": 9,
+      "beat": 1.25,
+      "absBeat": 32.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 57,
+      "measure": 9,
+      "beat": 1.5,
+      "absBeat": 32.5,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 58,
+      "measure": 9,
+      "beat": 1.75,
+      "absBeat": 32.75,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 59,
+      "measure": 9,
+      "beat": 2.0,
+      "absBeat": 33.0,
+      "durationBeats": 0.25,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 60,
+      "measure": 9,
+      "beat": 2.25,
+      "absBeat": 33.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 61,
+      "measure": 9,
+      "beat": 2.5,
+      "absBeat": 33.5,
+      "durationBeats": 0.5,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 62,
+      "measure": 9,
+      "beat": 3.0,
+      "absBeat": 34.0,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 63,
+      "measure": 9,
+      "beat": 4.5,
+      "absBeat": 35.5,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 64,
+      "measure": 9,
+      "beat": 4.75,
+      "absBeat": 35.75,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 65,
+      "measure": 10,
+      "beat": 1.0,
+      "absBeat": 36.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 66,
+      "measure": 10,
+      "beat": 1.25,
+      "absBeat": 36.25,
+      "durationBeats": 0.25,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 67,
+      "measure": 10,
+      "beat": 1.5,
+      "absBeat": 36.5,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 68,
+      "measure": 10,
+      "beat": 1.75,
+      "absBeat": 36.75,
+      "durationBeats": 0.5,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 69,
+      "measure": 10,
+      "beat": 2.25,
+      "absBeat": 37.25,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 70,
+      "measure": 10,
+      "beat": 3.75,
+      "absBeat": 38.75,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 71,
+      "measure": 10,
+      "beat": 4.0,
+      "absBeat": 39.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 72,
+      "measure": 10,
+      "beat": 4.25,
+      "absBeat": 39.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 73,
+      "measure": 10,
+      "beat": 4.5,
+      "absBeat": 39.5,
+      "durationBeats": 0.25,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 74,
+      "measure": 10,
+      "beat": 4.75,
+      "absBeat": 39.75,
+      "durationBeats": 0.25,
+      "written": "G4",
+      "labelPt": "Sol4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 75,
+      "measure": 11,
+      "beat": 1.0,
+      "absBeat": 40.0,
+      "durationBeats": 0.5,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 76,
+      "measure": 11,
+      "beat": 2.5,
+      "absBeat": 41.5,
+      "durationBeats": 1.0,
+      "written": "G5",
+      "labelPt": "Sol5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 77,
+      "measure": 11,
+      "beat": 3.5,
+      "absBeat": 42.5,
+      "durationBeats": 0.5,
+      "written": "F#5",
+      "labelPt": "Fa#5",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 78,
+      "measure": 11,
+      "beat": 4.0,
+      "absBeat": 43.0,
+      "durationBeats": 1.0,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 79,
+      "measure": 12,
+      "beat": 1.0,
+      "absBeat": 44.0,
+      "durationBeats": 2.0,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 80,
+      "measure": 12,
+      "beat": 4.0,
+      "absBeat": 47.0,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 81,
+      "measure": 12,
+      "beat": 4.5,
+      "absBeat": 47.5,
+      "durationBeats": 0.5,
+      "written": "G5",
+      "labelPt": "Sol5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 82,
+      "measure": 13,
+      "beat": 1.0,
+      "absBeat": 48.0,
+      "durationBeats": 0.5,
+      "written": "G5",
+      "labelPt": "Sol5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 83,
+      "measure": 13,
+      "beat": 1.5,
+      "absBeat": 48.5,
+      "durationBeats": 0.5,
+      "written": "F#5",
+      "labelPt": "Fa#5",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 84,
+      "measure": 13,
+      "beat": 2.0,
+      "absBeat": 49.0,
+      "durationBeats": 0.5,
+      "written": "F#5",
+      "labelPt": "Fa#5",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 85,
+      "measure": 13,
+      "beat": 2.5,
+      "absBeat": 49.5,
+      "durationBeats": 0.5,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 86,
+      "measure": 13,
+      "beat": 3.0,
+      "absBeat": 50.0,
+      "durationBeats": 0.5,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 87,
+      "measure": 13,
+      "beat": 3.5,
+      "absBeat": 50.5,
+      "durationBeats": 0.5,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 88,
+      "measure": 13,
+      "beat": 4.0,
+      "absBeat": 51.0,
+      "durationBeats": 1.0,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 89,
+      "measure": 14,
+      "beat": 1.0,
+      "absBeat": 52.0,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 90,
+      "measure": 14,
+      "beat": 3.5,
+      "absBeat": 54.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 91,
+      "measure": 14,
+      "beat": 4.0,
+      "absBeat": 55.0,
+      "durationBeats": 0.5,
+      "written": "G5",
+      "labelPt": "Sol5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 92,
+      "measure": 14,
+      "beat": 4.5,
+      "absBeat": 55.5,
+      "durationBeats": 0.5,
+      "written": "G5",
+      "labelPt": "Sol5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 93,
+      "measure": 15,
+      "beat": 1.0,
+      "absBeat": 56.0,
+      "durationBeats": 0.5,
+      "written": "F#5",
+      "labelPt": "Fa#5",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 94,
+      "measure": 15,
+      "beat": 1.5,
+      "absBeat": 56.5,
+      "durationBeats": 0.5,
+      "written": "F#5",
+      "labelPt": "Fa#5",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 95,
+      "measure": 15,
+      "beat": 2.0,
+      "absBeat": 57.0,
+      "durationBeats": 0.5,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 96,
+      "measure": 15,
+      "beat": 2.5,
+      "absBeat": 57.5,
+      "durationBeats": 0.5,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 97,
+      "measure": 15,
+      "beat": 3.0,
+      "absBeat": 58.0,
+      "durationBeats": 0.5,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 98,
+      "measure": 15,
+      "beat": 3.5,
+      "absBeat": 58.5,
+      "durationBeats": 1.0,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 99,
+      "measure": 15,
+      "beat": 4.5,
+      "absBeat": 59.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 100,
+      "measure": 16,
+      "beat": 3.0,
+      "absBeat": 62.0,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 101,
+      "measure": 16,
+      "beat": 3.5,
+      "absBeat": 62.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 102,
+      "measure": 16,
+      "beat": 4.0,
+      "absBeat": 63.0,
+      "durationBeats": 0.5,
+      "written": "G5",
+      "labelPt": "Sol5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 103,
+      "measure": 16,
+      "beat": 4.5,
+      "absBeat": 63.5,
+      "durationBeats": 0.5,
+      "written": "G5",
+      "labelPt": "Sol5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 104,
+      "measure": 17,
+      "beat": 1.0,
+      "absBeat": 64.0,
+      "durationBeats": 0.5,
+      "written": "F#5",
+      "labelPt": "Fa#5",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 105,
+      "measure": 17,
+      "beat": 1.5,
+      "absBeat": 64.5,
+      "durationBeats": 0.5,
+      "written": "F#5",
+      "labelPt": "Fa#5",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 106,
+      "measure": 17,
+      "beat": 2.0,
+      "absBeat": 65.0,
+      "durationBeats": 0.5,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 107,
+      "measure": 17,
+      "beat": 2.5,
+      "absBeat": 65.5,
+      "durationBeats": 0.5,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 108,
+      "measure": 17,
+      "beat": 3.0,
+      "absBeat": 66.0,
+      "durationBeats": 0.5,
+      "written": "D5",
+      "labelPt": "Re5",
+      "fingering": [
+        "1"
+      ],
+      "tie": null
+    },
+    {
+      "index": 109,
+      "measure": 17,
+      "beat": 3.5,
+      "absBeat": 66.5,
+      "durationBeats": 1.0,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 110,
+      "measure": 17,
+      "beat": 4.5,
+      "absBeat": 67.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 111,
+      "measure": 18,
+      "beat": 3.0,
+      "absBeat": 70.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 112,
+      "measure": 18,
+      "beat": 3.25,
+      "absBeat": 70.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 113,
+      "measure": 18,
+      "beat": 3.5,
+      "absBeat": 70.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 114,
+      "measure": 18,
+      "beat": 4.0,
+      "absBeat": 71.0,
+      "durationBeats": 0.25,
+      "written": "G4",
+      "labelPt": "Sol4",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    },
+    {
+      "index": 115,
+      "measure": 18,
+      "beat": 4.25,
+      "absBeat": 71.25,
+      "durationBeats": 0.25,
+      "written": "F#4",
+      "labelPt": "Fa#4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 116,
+      "measure": 18,
+      "beat": 4.5,
+      "absBeat": 71.5,
+      "durationBeats": 0.5,
+      "written": "E4",
+      "labelPt": "Mi4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 117,
+      "measure": 19,
+      "beat": 3.0,
+      "absBeat": 74.0,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 118,
+      "measure": 19,
+      "beat": 3.25,
+      "absBeat": 74.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 119,
+      "measure": 19,
+      "beat": 3.5,
+      "absBeat": 74.5,
+      "durationBeats": 0.5,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 120,
+      "measure": 19,
+      "beat": 4.0,
+      "absBeat": 75.0,
+      "durationBeats": 0.25,
+      "written": "A4",
+      "labelPt": "La4",
+      "fingering": [
+        "1",
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 121,
+      "measure": 19,
+      "beat": 4.25,
+      "absBeat": 75.25,
+      "durationBeats": 0.25,
+      "written": "B4",
+      "labelPt": "Si4",
+      "fingering": [
+        "2"
+      ],
+      "tie": null
+    },
+    {
+      "index": 122,
+      "measure": 19,
+      "beat": 4.5,
+      "absBeat": 75.5,
+      "durationBeats": 0.5,
+      "written": "E5",
+      "labelPt": "Mi5",
+      "fingering": [
+        "0"
+      ],
+      "tie": null
+    }
+  ]
 }

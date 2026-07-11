@@ -7,7 +7,7 @@
   "audio": "audio/baile-de-favela.wav",
   "fingeringsPdf": "fingerings/baile-de-favela-trompete-fingerings.pdf",
   "data": "data/songs/baile-de-favela.json",
-  "defaultBpm": 100,
+  "defaultBpm": 110,
   "trumpetPart": "Trumpet in Bb Tpt. in Bb",
   "totalMeasures": 8,
   "totalBeats": 32.0,

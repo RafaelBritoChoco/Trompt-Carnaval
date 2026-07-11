@@ -7,7 +7,7 @@
   "audio": "audio/rap-das-armas.wav",
   "fingeringsPdf": "fingerings/rap-das-armas-trompete-fingerings.pdf",
   "data": "data/songs/rap-das-armas.json",
-  "defaultBpm": 100,
+  "defaultBpm": 120,
   "trumpetPart": "Trumpet in Bb Tpt. in Bb",
   "totalMeasures": 10,
   "totalBeats": 40.0,

@@ -7,7 +7,7 @@
   "audio": "audio/rap-da-felicidade.wav",
   "fingeringsPdf": "fingerings/rap-da-felicidade-trompete-fingerings.pdf",
   "data": "data/songs/rap-da-felicidade.json",
-  "defaultBpm": 100,
+  "defaultBpm": 120,
   "trumpetPart": "Trumpet in Bb Tpt. in Bb",
   "totalMeasures": 17,
   "totalBeats": 68.0,

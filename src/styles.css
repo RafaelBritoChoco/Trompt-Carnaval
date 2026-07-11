@@ -1053,6 +1053,11 @@ th {
   gap: calc(8px * var(--rail-scale, 1));
   overflow-x: auto;
   padding: calc(10px * var(--rail-scale, 1)) 14px;
+  scrollbar-width: none;
+}
+
+.note-rail::-webkit-scrollbar {
+  display: none;
 }
 
 .note-chip {

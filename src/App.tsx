@@ -27,6 +27,21 @@ import type { Catalog, ScoreNote, Setlist, Song, SongData } from "./types";
 
 const catalogUrl = "/data/catalog.json";
 const setlistKey = "bloco-setlists-v1";
+const audioLeadSeconds = 0.035;
+const audioLookAheadSeconds = 0.12;
+
+function performanceSeconds() {
+  return performance.now() / 1000;
+}
+
+async function resumeAudioContext(context: AudioContext) {
+  if (context.state === "running") return true;
+  await Promise.race([
+    context.resume(),
+    new Promise<void>((resolve) => window.setTimeout(resolve, 600)),
+  ]);
+  return String(context.state) === "running";
+}
 const trainingSequence = [
   { id: "baile-de-favela", label: "Baile de favela" },
   { id: "meu-jeito-de-amar", label: "Meu Jeito de Amar" },
@@ -547,8 +562,15 @@ function NoteRail({
   railScale?: number;
   onNoteClick?: (note: ScoreNote) => void;
 }) {
+  const railRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const current = railRef.current?.querySelector<HTMLElement>(".note-chip.current");
+    current?.scrollIntoView({ behavior: "auto", block: "nearest", inline: "center" });
+  }, [currentIndex]);
+
   return (
-    <div className="note-rail" style={{ "--rail-scale": railScale } as CSSProperties}>
+    <div className="note-rail" ref={railRef} style={{ "--rail-scale": railScale } as CSSProperties}>
       {notes.slice(Math.max(0, currentIndex - 8), currentIndex + 24).map((note) => (
         <button className={`note-chip ${activeIndices.includes(note.index) ? "current" : ""}`} key={note.index} onClick={() => onNoteClick?.(note)} type="button">
           <span className="fingering">{fingeringForNote(note, octaveShift).join("/")}</span>
@@ -668,6 +690,7 @@ function MelodyPlayer({
   const playbackStartTimeRef = useRef(0);
   const playbackStartBeatRef = useRef(0);
   const nextNoteIndexRef = useRef(0);
+  const scheduledOscillatorsRef = useRef(new Set<OscillatorNode>());
   const [playing, setPlaying] = useState(false);
   const [starting, setStarting] = useState(false);
   const [positionBeat, setPositionBeat] = useState(0);
@@ -687,7 +710,8 @@ function MelodyPlayer({
 
   async function prepareAudio() {
     const ctx = getAudioContext();
-    await ctx.resume();
+    const running = await resumeAudioContext(ctx);
+    if (!running) return;
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -700,28 +724,42 @@ function MelodyPlayer({
     await new Promise((resolve) => window.setTimeout(resolve, 30));
   }
 
-  function playNote(note: ScoreNote) {
+  function stopScheduledNotes() {
+    scheduledOscillatorsRef.current.forEach((oscillator) => {
+      try {
+        oscillator.stop();
+      } catch {
+        // The oscillator may already have ended.
+      }
+    });
+    scheduledOscillatorsRef.current.clear();
+  }
+
+  function playNote(note: ScoreNote, when: number) {
     if (!noteSound) return;
     const frequency = noteFrequency(note.written);
     if (!frequency) return;
     const ctx = getAudioContext();
-    const now = ctx.currentTime;
+    const startAt = Math.max(ctx.currentTime, when);
     const duration = Math.max(0.08, (note.durationBeats * 60 * 0.9) / safeBpm);
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = "triangle";
     osc.frequency.value = frequency * 2 ** octaveShift;
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.14, now + 0.018);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    gain.gain.setValueAtTime(0.0001, startAt);
+    gain.gain.exponentialRampToValueAtTime(0.14, startAt + 0.018);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
     osc.connect(gain);
     gain.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + duration + 0.03);
+    scheduledOscillatorsRef.current.add(osc);
+    osc.onended = () => scheduledOscillatorsRef.current.delete(osc);
+    osc.start(startAt);
+    osc.stop(startAt + duration + 0.03);
   }
 
   useEffect(() => {
     const defaultBpm = clampNumber(song.defaultBpm, 30, 240, 100);
+    stopScheduledNotes();
     setPlaying(false);
     setStarting(false);
     setPositionBeat(startBeat);
@@ -736,16 +774,18 @@ function MelodyPlayer({
   useEffect(() => {
     if (!seekRequest) return;
     const nextBeat = clampNumber(seekRequest.beat, startBeat, song.totalBeats, startBeat);
+    stopScheduledNotes();
     playbackStartBeatRef.current = nextBeat;
-    playbackStartTimeRef.current = performance.now();
+    playbackStartTimeRef.current = performanceSeconds() + audioLeadSeconds;
     nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, nextBeat);
     setPositionBeat(nextBeat);
   }, [seekRequest, song.notes, song.totalBeats, startBeat]);
 
   function seekToBeat(value: number) {
     const nextBeat = clampNumber(value, startBeat, song.totalBeats, positionBeat);
+    stopScheduledNotes();
     playbackStartBeatRef.current = nextBeat;
-    playbackStartTimeRef.current = performance.now();
+    playbackStartTimeRef.current = performanceSeconds() + audioLeadSeconds;
     nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, nextBeat);
     setPositionBeat(nextBeat);
   }
@@ -756,20 +796,30 @@ function MelodyPlayer({
 
   useEffect(() => {
     if (!playing) return;
+    stopScheduledNotes();
     playbackStartBeatRef.current = positionBeat;
-    playbackStartTimeRef.current = performance.now();
+    playbackStartTimeRef.current = performanceSeconds() + audioLeadSeconds;
     nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, positionBeat);
-  }, [safeBpm]);
+  }, [noteSound, octaveShift, safeBpm]);
 
   useEffect(() => {
     if (!playing || !canPlay) return;
     let raf = 0;
+    const ctx = getAudioContext();
     const tick = () => {
-      const elapsedSeconds = (performance.now() - playbackStartTimeRef.current) / 1000;
+      const clockNow = performanceSeconds();
+      const elapsedSeconds = Math.max(0, clockNow - playbackStartTimeRef.current);
       const nextBeat = playbackStartBeatRef.current + elapsedSeconds * (safeBpm / 60);
+      const scheduleThroughBeat = nextBeat + audioLookAheadSeconds * (safeBpm / 60);
       let index = nextNoteIndexRef.current;
-      while (index < song.notes.length && song.notes[index].absBeat <= nextBeat + 0.001) {
-        playNote(song.notes[index]);
+      while (index < song.notes.length && song.notes[index].absBeat <= scheduleThroughBeat + 0.001) {
+        const note = song.notes[index];
+        const secondsUntilNote = Math.max(
+          0,
+          playbackStartTimeRef.current - clockNow + ((note.absBeat - playbackStartBeatRef.current) * 60) / safeBpm,
+        );
+        const when = ctx.currentTime + secondsUntilNote;
+        playNote(note, when);
         index += 1;
       }
       nextNoteIndexRef.current = index;
@@ -801,6 +851,7 @@ function MelodyPlayer({
 
   async function playPause() {
     if (playing) {
+      stopScheduledNotes();
       setPlaying(false);
       return;
     }
@@ -810,7 +861,7 @@ function MelodyPlayer({
       await prepareAudio();
       const nextStartBeat = positionBeat >= song.totalBeats || positionBeat < startBeat ? startBeat : positionBeat;
       playbackStartBeatRef.current = nextStartBeat;
-      playbackStartTimeRef.current = performance.now();
+      playbackStartTimeRef.current = performanceSeconds() + audioLeadSeconds;
       nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, nextStartBeat);
       setPositionBeat(nextStartBeat);
       setPlaying(true);
@@ -820,12 +871,15 @@ function MelodyPlayer({
   }
 
   function reset() {
+    stopScheduledNotes();
     setPlaying(false);
     playbackStartBeatRef.current = startBeat;
     playbackStartTimeRef.current = 0;
     nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, startBeat);
     setPositionBeat(startBeat);
   }
+
+  useEffect(() => () => stopScheduledNotes(), []);
 
   return (
     <section className="melody-player">
@@ -895,6 +949,7 @@ function Reader({
   const playbackStartBeatRef = useRef(0);
   const nextNoteIndexRef = useRef(0);
   const nextMetronomeBeatRef = useRef(0);
+  const scheduledOscillatorsRef = useRef(new Set<OscillatorNode>());
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [starting, setStarting] = useState(false);
@@ -932,7 +987,8 @@ function Reader({
 
   async function prepareAudioForPlayback() {
     const ctx = getAudioContext();
-    await ctx.resume();
+    const running = await resumeAudioContext(ctx);
+    if (!running) return;
 
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
@@ -946,40 +1002,55 @@ function Reader({
     await new Promise((resolve) => window.setTimeout(resolve, 35));
   }
 
-  function playScoreNote(note: ScoreNote) {
+  function stopScheduledAudio() {
+    scheduledOscillatorsRef.current.forEach((oscillator) => {
+      try {
+        oscillator.stop();
+      } catch {
+        // The oscillator may already have ended.
+      }
+    });
+    scheduledOscillatorsRef.current.clear();
+  }
+
+  function playScoreNote(note: ScoreNote, when: number) {
     const frequency = noteFrequency(note.written);
     if (!frequency) return;
     const ctx = getAudioContext();
-    const now = ctx.currentTime;
+    const startAt = Math.max(ctx.currentTime, when);
     const duration = Math.max(0.08, (note.durationBeats * 60 * 0.88) / safeBpm);
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = "triangle";
     osc.frequency.value = frequency * 2 ** octaveShift;
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.12, now + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    gain.gain.setValueAtTime(0.0001, startAt);
+    gain.gain.exponentialRampToValueAtTime(0.12, startAt + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
     osc.connect(gain);
     gain.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + duration + 0.03);
+    scheduledOscillatorsRef.current.add(osc);
+    osc.onended = () => scheduledOscillatorsRef.current.delete(osc);
+    osc.start(startAt);
+    osc.stop(startAt + duration + 0.03);
   }
 
-  function playMetronomeClick(beatIndex: number) {
+  function playMetronomeClick(beatIndex: number, when: number) {
     const ctx = getAudioContext();
-    const now = ctx.currentTime;
+    const startAt = Math.max(ctx.currentTime, when);
     const accent = beatIndex % 4 === 0;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = "square";
     osc.frequency.value = accent ? 1500 : 950;
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(accent ? 0.12 : 0.075, now + 0.005);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+    gain.gain.setValueAtTime(0.0001, startAt);
+    gain.gain.exponentialRampToValueAtTime(accent ? 0.12 : 0.075, startAt + 0.005);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startAt + 0.045);
     osc.connect(gain);
     gain.connect(ctx.destination);
-    osc.start(now);
-    osc.stop(now + 0.055);
+    scheduledOscillatorsRef.current.add(osc);
+    osc.onended = () => scheduledOscillatorsRef.current.delete(osc);
+    osc.start(startAt);
+    osc.stop(startAt + 0.055);
   }
 
   const followCursor = useCallback((cursorElement: HTMLElement | null) => {
@@ -1008,6 +1079,7 @@ function Reader({
 
   useEffect(() => {
     const defaultBpm = clampNumber(song.defaultBpm, 30, 240, 100);
+    stopScheduledAudio();
     setPlaying(false);
     setStarting(false);
     setScoreReady(false);
@@ -1026,11 +1098,12 @@ function Reader({
 
   useEffect(() => {
     if (!playing) return;
+    stopScheduledAudio();
     playbackStartBeatRef.current = positionBeat;
-    playbackStartTimeRef.current = performance.now();
+    playbackStartTimeRef.current = performanceSeconds() + audioLeadSeconds;
     nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, positionBeat);
     nextMetronomeBeatRef.current = Math.ceil(positionBeat - 0.001);
-  }, [safeBpm]);
+  }, [metronome, noteSound, octaveShift, safeBpm]);
 
   useEffect(() => {
     if (!metronome) return;
@@ -1040,12 +1113,25 @@ function Reader({
   useEffect(() => {
     if (!playing) return;
     let raf = 0;
+    const ctx = getAudioContext();
     const tick = () => {
-      const elapsedSeconds = (performance.now() - playbackStartTimeRef.current) / 1000;
+      const clockNow = performanceSeconds();
+      const elapsedSeconds = Math.max(0, clockNow - playbackStartTimeRef.current);
       let nextBeat = playbackStartBeatRef.current + elapsedSeconds * (safeBpm / 60);
       const loopStartBeat = measureStartBeat(song.notes, loopStart);
       const nextMeasureBeat = loopEnd >= song.totalMeasures ? song.totalBeats : measureStartBeat(song.notes, loopEnd + 1);
       const loopEndBeat = Math.max(loopStartBeat + 0.25, nextMeasureBeat || song.totalBeats);
+      if (loopEnabled && nextBeat >= loopEndBeat - 0.001) {
+        stopScheduledAudio();
+        nextBeat = loopStartBeat;
+        playbackStartBeatRef.current = loopStartBeat;
+        playbackStartTimeRef.current = performanceSeconds() + audioLeadSeconds;
+        nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, loopStartBeat);
+        nextMetronomeBeatRef.current = Math.ceil(loopStartBeat - 0.001);
+      }
+
+      const lookAheadBeat = nextBeat + audioLookAheadSeconds * (safeBpm / 60);
+      const scheduleThroughBeat = loopEnabled ? Math.min(lookAheadBeat, loopEndBeat - 0.001) : Math.min(lookAheadBeat, song.totalBeats);
 
       const playScheduledNotesUntil = (untilBeat: number) => {
         if (!noteSound) {
@@ -1054,7 +1140,13 @@ function Reader({
         }
         let index = nextNoteIndexRef.current;
         while (index < song.notes.length && song.notes[index].absBeat <= untilBeat + 0.001) {
-          playScoreNote(song.notes[index]);
+          const note = song.notes[index];
+          const secondsUntilNote = Math.max(
+            0,
+            playbackStartTimeRef.current - clockNow + ((note.absBeat - playbackStartBeatRef.current) * 60) / safeBpm,
+          );
+          const when = ctx.currentTime + secondsUntilNote;
+          playScoreNote(note, when);
           index += 1;
         }
         nextNoteIndexRef.current = index;
@@ -1063,23 +1155,19 @@ function Reader({
       const playMetronomeUntil = (untilBeat: number) => {
         if (!metronome) return;
         while (nextMetronomeBeatRef.current <= untilBeat + 0.001) {
-          playMetronomeClick(nextMetronomeBeatRef.current);
+          const beat = nextMetronomeBeatRef.current;
+          const secondsUntilBeat = Math.max(
+            0,
+            playbackStartTimeRef.current - clockNow + ((beat - playbackStartBeatRef.current) * 60) / safeBpm,
+          );
+          const when = ctx.currentTime + secondsUntilBeat;
+          playMetronomeClick(beat, when);
           nextMetronomeBeatRef.current += 1;
         }
       };
 
-      if (loopEnabled && nextBeat >= loopEndBeat) {
-        playScheduledNotesUntil(loopEndBeat);
-        playMetronomeUntil(loopEndBeat);
-        nextBeat = loopStartBeat;
-        playbackStartBeatRef.current = loopStartBeat;
-        playbackStartTimeRef.current = performance.now();
-        nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, loopStartBeat);
-        nextMetronomeBeatRef.current = Math.ceil(loopStartBeat - 0.001);
-      } else {
-        playScheduledNotesUntil(nextBeat);
-        playMetronomeUntil(nextBeat);
-      }
+      playScheduledNotesUntil(scheduleThroughBeat);
+      playMetronomeUntil(scheduleThroughBeat);
       setPositionBeat(nextBeat);
 
       if (!loopEnabled && nextBeat >= song.totalBeats) {
@@ -1120,8 +1208,9 @@ function Reader({
 
   function seekToBeat(value: number) {
     const nextBeat = clampNumber(value, playableStartBeat, song.totalBeats, positionBeat);
+    stopScheduledAudio();
     playbackStartBeatRef.current = nextBeat;
-    playbackStartTimeRef.current = performance.now();
+    playbackStartTimeRef.current = performanceSeconds() + audioLeadSeconds;
     nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, nextBeat);
     nextMetronomeBeatRef.current = Math.ceil(nextBeat - 0.001);
     setPositionBeat(nextBeat);
@@ -1129,6 +1218,7 @@ function Reader({
 
   async function playPause() {
     if (playing) {
+      stopScheduledAudio();
       setPlaying(false);
       return;
     }
@@ -1151,7 +1241,7 @@ function Reader({
       }
     }
     playbackStartBeatRef.current = startBeat;
-    playbackStartTimeRef.current = performance.now();
+    playbackStartTimeRef.current = performanceSeconds() + audioLeadSeconds;
     nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, startBeat);
     nextMetronomeBeatRef.current = Math.ceil(startBeat - 0.001);
     setPositionBeat(startBeat);
@@ -1160,6 +1250,7 @@ function Reader({
   }
 
   function reset() {
+    stopScheduledAudio();
     setPlaying(false);
     playbackStartBeatRef.current = playableStartBeat;
     nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, playableStartBeat);
@@ -1171,12 +1262,15 @@ function Reader({
   function jumpMeasure(delta: number) {
     const targetMeasure = Math.max(1, (referenceNote?.measure ?? 1) + delta);
     const target = song.notes.find((note) => note.measure >= targetMeasure) ?? song.notes[0];
+    stopScheduledAudio();
     playbackStartBeatRef.current = target.absBeat;
-    playbackStartTimeRef.current = performance.now();
+    playbackStartTimeRef.current = performanceSeconds() + audioLeadSeconds;
     nextNoteIndexRef.current = firstNoteIndexAtOrAfter(song.notes, target.absBeat);
     nextMetronomeBeatRef.current = Math.ceil(target.absBeat - 0.001);
     setPositionBeat(target.absBeat);
   }
+
+  useEffect(() => () => stopScheduledAudio(), []);
 
   return (
     <section className="reader">

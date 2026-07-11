@@ -104,7 +104,7 @@
           <staff-distance>96.08</staff-distance>
           </staff-layout>
         </print>
-      <attributes>
+      <direction placement="above"><direction-type><metronome><beat-unit>quarter</beat-unit><per-minute>110</per-minute></metronome></direction-type><sound tempo="110" /></direction><attributes>
         <divisions>2</divisions>
         <key>
           <fifths>0</fifths>

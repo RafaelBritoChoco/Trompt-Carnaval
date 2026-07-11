@@ -34,6 +34,21 @@ PT_NAMES = {
     ("B", 0): "Si",
 }
 
+DEFAULT_BPMS = {
+    "baile-de-favela": 110,
+    "meu-jeito-de-amar": 160,
+    "rap-da-felicidade": 120,
+    "malandramente": 130,
+    "vai-malandra": 130,
+    "lambafunk": 118,
+    "vira-de-ladinho": 146,
+    "rap-das-armas": 120,
+    "eu-vou-pro-baile-da-gaiola": 152,
+    "cheguei": 80,
+    "fala-mal-de-mim": 120,
+    "morto-muito-louco": 120,
+}
+
 
 def slugify(value: str) -> str:
     normalized = unicodedata.normalize("NFKD", value)
@@ -235,6 +250,8 @@ def trumpet_only_musicxml(root: ET.Element, part_id: str) -> str:
 def extract_notes(part: ET.Element) -> tuple[list[dict], int, float]:
     notes: list[dict] = []
     divisions = 1
+    time_beats = 4
+    time_beat_type = 4
     abs_measure_start = 0.0
     total_measures = 0
     index = 0
@@ -245,8 +262,15 @@ def extract_notes(part: ET.Element) -> tuple[list[dict], int, float]:
         attrs = measure.find("attributes")
         if attrs is not None and attrs.findtext("divisions"):
             divisions = int(attrs.findtext("divisions") or divisions)
+        if attrs is not None:
+            time = attrs.find("time")
+            if time is not None:
+                time_beats = int(time.findtext("beats") or time_beats)
+                time_beat_type = int(time.findtext("beat-type") or time_beat_type)
+        expected_duration = time_beats * 4.0 / time_beat_type
         cursor = 0.0
         max_cursor = 0.0
+        previous_note_start = 0.0
         for child in measure:
             if child.tag == "backup":
                 cursor -= float(child.findtext("duration") or 0) / divisions
@@ -258,8 +282,12 @@ def extract_notes(part: ET.Element) -> tuple[list[dict], int, float]:
             if child.tag != "note":
                 continue
             duration_beats = float(child.findtext("duration") or 0) / divisions
+            is_chord = child.find("chord") is not None
+            note_start = previous_note_start if is_chord else cursor
+            if not is_chord:
+                previous_note_start = note_start
             pitch = child.find("pitch")
-            if pitch is not None:
+            if pitch is not None and child.find("grace") is None:
                 step = pitch.findtext("step") or "C"
                 alter = int(pitch.findtext("alter") or 0)
                 octave = int(pitch.findtext("octave") or 4)
@@ -269,8 +297,8 @@ def extract_notes(part: ET.Element) -> tuple[list[dict], int, float]:
                     {
                         "index": index,
                         "measure": measure_number,
-                        "beat": round(cursor + 1, 4),
-                        "absBeat": round(abs_measure_start + cursor, 4),
+                        "beat": round(note_start + 1, 4),
+                        "absBeat": round(abs_measure_start + note_start, 4),
                         "durationBeats": round(duration_beats, 4),
                         "written": written_name(step, alter, octave),
                         "labelPt": label_pt(step, alter, octave),
@@ -279,9 +307,12 @@ def extract_notes(part: ET.Element) -> tuple[list[dict], int, float]:
                     }
                 )
                 index += 1
-            cursor += duration_beats
-            max_cursor = max(max_cursor, cursor)
-        abs_measure_start += max(max_cursor, 4.0)
+            if not is_chord:
+                cursor += duration_beats
+                max_cursor = max(max_cursor, cursor)
+        implicit = measure.get("implicit") == "yes"
+        measure_duration = max_cursor if implicit and max_cursor > 0 else max(expected_duration, max_cursor)
+        abs_measure_start += measure_duration
 
     return notes, total_measures, abs_measure_start
 
@@ -346,10 +377,43 @@ def mscz_measure_events(staff: ET.Element) -> tuple[list[list[dict]], list[dict]
             measures.append(events)
             abs_measure_start += 4.0
             continue
+        active_tuplet: dict | None = None
         for child in voice:
+            if child.tag == "Tuplet":
+                actual_notes = int(child.findtext("actualNotes") or 3)
+                normal_notes = int(child.findtext("normalNotes") or 2)
+                active_tuplet = {
+                    "actualNotes": actual_notes,
+                    "normalNotes": normal_notes,
+                    "remaining": actual_notes,
+                }
+                continue
             if child.tag not in {"Chord", "Rest"}:
                 continue
-            duration_beats = mscz_duration_beats(child)
+            nominal_beats = mscz_duration_beats(child)
+            duration_beats = nominal_beats
+            time_modification = None
+            tuplet_start = False
+            tuplet_stop = False
+            if active_tuplet:
+                duration_beats *= active_tuplet["normalNotes"] / active_tuplet["actualNotes"]
+                time_modification = {
+                    "actualNotes": active_tuplet["actualNotes"],
+                    "normalNotes": active_tuplet["normalNotes"],
+                }
+                tuplet_start = active_tuplet["remaining"] == active_tuplet["actualNotes"]
+                active_tuplet["remaining"] -= 1
+                tuplet_stop = active_tuplet["remaining"] == 0
+                if tuplet_stop:
+                    active_tuplet = None
+            event_base = {
+                "durationBeats": duration_beats,
+                "durationType": child.findtext("durationType") or duration_type_name(nominal_beats),
+                "dots": int(child.findtext("dots") or 0),
+                "timeModification": time_modification,
+                "tupletStart": tuplet_start,
+                "tupletStop": tuplet_stop,
+            }
             if child.tag == "Chord":
                 source_note = child.find("Note")
                 if source_note is not None:
@@ -366,10 +430,10 @@ def mscz_measure_events(staff: ET.Element) -> tuple[list[list[dict]], list[dict]
                         "tie": None,
                     }
                     notes.append(note_data)
-                    events.append({"kind": "note", "step": step, "alter": alter, "octave": octave, "durationBeats": duration_beats})
+                    events.append({"kind": "note", "step": step, "alter": alter, "octave": octave, **event_base})
                     note_index += 1
             else:
-                events.append({"kind": "rest", "durationBeats": duration_beats})
+                events.append({"kind": "rest", **event_base})
             cursor += duration_beats
             max_cursor = max(max_cursor, cursor)
         measures.append(events)
@@ -378,7 +442,7 @@ def mscz_measure_events(staff: ET.Element) -> tuple[list[list[dict]], list[dict]
     return measures, notes, len(measures), abs_measure_start
 
 
-def mscz_events_to_musicxml(title: str, measures: list[list[dict]]) -> str:
+def mscz_events_to_musicxml(title: str, measures: list[list[dict]], default_bpm: int = 100) -> str:
     score = ET.Element("score-partwise", version="3.1")
     work = ET.SubElement(score, "work")
     ET.SubElement(work, "work-title").text = title
@@ -387,10 +451,14 @@ def mscz_events_to_musicxml(title: str, measures: list[list[dict]]) -> str:
     ET.SubElement(score_part, "part-name").text = "Trumpet in Bb"
     ET.SubElement(score_part, "part-abbreviation").text = "Tpt. in Bb"
     part = ET.SubElement(score, "part", id="P1")
-    divisions = 4
+    divisions = 12
 
     for index, events in enumerate(measures, start=1):
-        measure = ET.SubElement(part, "measure", number=str(index))
+        measure_duration = sum(event["durationBeats"] for event in events)
+        measure_attributes = {"number": str(index)}
+        if index == 1 and 0 < measure_duration < 4:
+            measure_attributes["implicit"] = "yes"
+        measure = ET.SubElement(part, "measure", **measure_attributes)
         if index == 1:
             attrs = ET.SubElement(measure, "attributes")
             ET.SubElement(attrs, "divisions").text = str(divisions)
@@ -402,6 +470,12 @@ def mscz_events_to_musicxml(title: str, measures: list[list[dict]]) -> str:
             clef = ET.SubElement(attrs, "clef")
             ET.SubElement(clef, "sign").text = "G"
             ET.SubElement(clef, "line").text = "2"
+            direction = ET.SubElement(measure, "direction", placement="above")
+            direction_type = ET.SubElement(direction, "direction-type")
+            metronome = ET.SubElement(direction_type, "metronome")
+            ET.SubElement(metronome, "beat-unit").text = "quarter"
+            ET.SubElement(metronome, "per-minute").text = str(default_bpm)
+            ET.SubElement(direction, "sound", tempo=str(default_bpm))
 
         for event in events:
             note = ET.SubElement(measure, "note")
@@ -415,7 +489,20 @@ def mscz_events_to_musicxml(title: str, measures: list[list[dict]]) -> str:
                 ET.SubElement(pitch, "octave").text = str(event["octave"])
             duration = max(1, int(round(event["durationBeats"] * divisions)))
             ET.SubElement(note, "duration").text = str(duration)
-            ET.SubElement(note, "type").text = duration_type_name(event["durationBeats"])
+            ET.SubElement(note, "type").text = event.get("durationType") or duration_type_name(event["durationBeats"])
+            for _ in range(event.get("dots", 0)):
+                ET.SubElement(note, "dot")
+            time_modification = event.get("timeModification")
+            if time_modification:
+                time = ET.SubElement(note, "time-modification")
+                ET.SubElement(time, "actual-notes").text = str(time_modification["actualNotes"])
+                ET.SubElement(time, "normal-notes").text = str(time_modification["normalNotes"])
+            if event.get("tupletStart") or event.get("tupletStop"):
+                notations = ET.SubElement(note, "notations")
+                if event.get("tupletStart"):
+                    ET.SubElement(notations, "tuplet", type="start")
+                if event.get("tupletStop"):
+                    ET.SubElement(notations, "tuplet", type="stop")
 
     return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + ET.tostring(score, encoding="unicode")
 
@@ -483,11 +570,12 @@ def import_repertoire(root_dir: Path, app_public: Path) -> dict:
                 try:
                     mscz_root = read_mscz(mscz)
                     work_title = mscz_work_title(mscz_root)
-                    if slugify(work_title) == song_id:
+                    if slugify(work_title) == song_id or slugify(mscz.stem) == song_id:
                         staff, part_name = mscz_trumpet_staff(mscz_root)
                         measure_events, notes, total_measures, total_beats = mscz_measure_events(staff)
                         score_name = f"{song_id}.musicxml"
-                        (scores_dir / score_name).write_text(mscz_events_to_musicxml(folder.name, measure_events), encoding="utf-8")
+                        bpm = DEFAULT_BPMS.get(song_id, 100)
+                        (scores_dir / score_name).write_text(mscz_events_to_musicxml(folder.name, measure_events, bpm), encoding="utf-8")
                         song_data = {
                             "id": song_id,
                             "title": folder.name,
@@ -499,7 +587,7 @@ def import_repertoire(root_dir: Path, app_public: Path) -> dict:
                             "sourceImage": source_image_rel,
                             "sourcePdf": source_pdf_rel,
                             "data": f"data/songs/{song_id}.json",
-                            "defaultBpm": 100,
+                            "defaultBpm": bpm,
                             "trumpetPart": part_name,
                             "totalMeasures": total_measures,
                             "totalBeats": round(total_beats, 4),
@@ -527,7 +615,7 @@ def import_repertoire(root_dir: Path, app_public: Path) -> dict:
                 "sourceImage": source_image_rel,
                 "sourcePdf": source_pdf_rel,
                 "data": f"data/songs/{song_id}.json",
-                "defaultBpm": 100,
+                "defaultBpm": DEFAULT_BPMS.get(song_id, 100),
                 "trumpetPart": "",
                 "totalMeasures": 0,
                 "totalBeats": 0,
@@ -567,7 +655,7 @@ def import_repertoire(root_dir: Path, app_public: Path) -> dict:
             "audio": audio_rel,
             "fingeringsPdf": fingering_rel,
             "data": f"data/songs/{song_id}.json",
-            "defaultBpm": 100,
+            "defaultBpm": DEFAULT_BPMS.get(song_id, 100),
             "trumpetPart": part_name,
             "totalMeasures": total_measures,
             "totalBeats": round(total_beats, 4),

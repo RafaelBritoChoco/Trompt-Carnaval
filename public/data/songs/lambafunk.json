@@ -10,7 +10,7 @@
   "sourceImage": null,
   "sourcePdf": "sources/lambafunk.pdf",
   "data": "data/songs/lambafunk.json",
-  "defaultBpm": 100,
+  "defaultBpm": 118,
   "trumpetPart": "",
   "totalMeasures": 0,
   "totalBeats": 0,

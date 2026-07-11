@@ -7,7 +7,7 @@
   "audio": "audio/fala-mal-de-mim.wav",
   "fingeringsPdf": "fingerings/fala-mal-de-mim-trompete-fingerings.pdf",
   "data": "data/songs/fala-mal-de-mim.json",
-  "defaultBpm": 100,
+  "defaultBpm": 120,
   "trumpetPart": "Trumpet in Bb Tpt. in Bb",
   "totalMeasures": 5,
   "totalBeats": 20.0,
