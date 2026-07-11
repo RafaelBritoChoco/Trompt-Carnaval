@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { CursorType, OpenSheetMusicDisplay } from "opensheetmusicdisplay";
+import type { OpenSheetMusicDisplay as OpenSheetMusicDisplayInstance } from "opensheetmusicdisplay";
 import {
   Download,
   FileMusic,
@@ -14,6 +14,7 @@ import {
   Plus,
   RotateCcw,
   Search,
+  SlidersHorizontal,
   SkipBack,
   SkipForward,
   Trash2,
@@ -229,6 +230,10 @@ function scalePercent(value: number) {
   return `${Math.round(value * 100)}%`;
 }
 
+function initialReaderZoom() {
+  return window.matchMedia("(max-width: 760px)").matches ? 0.95 : 1.55;
+}
+
 function SizeSlider({
   label,
   value,
@@ -354,10 +359,13 @@ function ScoreView({
   onNoteClick?: (note: ScoreNote) => void;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const osmdRef = useRef<OpenSheetMusicDisplay | null>(null);
+  const osmdRef = useRef<OpenSheetMusicDisplayInstance | null>(null);
   const coloredNotesRef = useRef<Array<{ setColor: (color: string, options: Record<string, boolean>) => void }>>([]);
+  const pitchedSlotsRef = useRef<boolean[]>([]);
+  const renderedZoomRef = useRef<number | null>(null);
   const [scoreReady, setScoreReady] = useState(false);
   const [fingeringMarkers, setFingeringMarkers] = useState<FingeringMarker[]>([]);
+  const [renderRevision, setRenderRevision] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -366,31 +374,40 @@ function ScoreView({
       setScoreReady(false);
       setFingeringMarkers([]);
       onReady?.(false);
+      const [{ CursorType, OpenSheetMusicDisplay }, xml] = await Promise.all([
+        import("opensheetmusicdisplay"),
+        fetch(`/${song.musicxml}`).then((res) => res.text()),
+      ]);
+      if (cancelled || !containerRef.current) return;
       containerRef.current.innerHTML = "";
       const osmd = new OpenSheetMusicDisplay(containerRef.current, {
         autoResize: true,
         cursorsOptions: [{ type: CursorType.Standard, color: "#10a64a", alpha: 0.55, follow: false }],
         drawPartAbbreviations: false,
         drawPartNames: false,
+        drawComposer: false,
+        drawCredits: false,
+        drawLyricist: false,
         drawTitle: false,
         drawSubtitle: false,
         followCursor: false,
         drawingParameters: "default",
       });
       osmdRef.current = osmd;
-      const xml = await fetch(`/${song.musicxml}`).then((res) => res.text());
       const pitchedSlots = musicXmlPitchedSlots(xml);
+      pitchedSlotsRef.current = pitchedSlots;
       if (cancelled) return;
       await osmd.load(xml);
       osmd.zoom = zoom;
       await osmd.render();
       if (cancelled) return;
-      if (showFingerings && containerRef.current) setFingeringMarkers(buildFingeringMarkers(song, containerRef.current, fingeringOctaveShift, pitchedSlots));
+      renderedZoomRef.current = zoom;
       if (highlight) osmd.cursor?.show();
       else osmd.cursor?.hide();
       osmd.cursor?.reset();
       osmd.cursor?.update();
       setScoreReady(true);
+      setRenderRevision((value) => value + 1);
       onReady?.(true);
     }
     renderScore().catch((error) => {
@@ -403,7 +420,59 @@ function ScoreView({
     return () => {
       cancelled = true;
     };
-  }, [song, song.id, song.musicxml, zoom, showFingerings, highlight, fingeringOctaveShift, onReady]);
+  }, [song.id, song.musicxml, onReady]);
+
+  useEffect(() => {
+    if (!scoreReady || !osmdRef.current || renderedZoomRef.current === zoom) return;
+    let cancelled = false;
+    const osmd = osmdRef.current;
+    async function renderZoom() {
+      osmd.zoom = zoom;
+      await osmd.render();
+      if (cancelled) return;
+      renderedZoomRef.current = zoom;
+      osmd.cursor?.reset();
+      osmd.cursor?.update();
+      setRenderRevision((value) => value + 1);
+    }
+    void renderZoom().catch(console.error);
+    return () => {
+      cancelled = true;
+    };
+  }, [scoreReady, zoom]);
+
+  useEffect(() => {
+    if (!scoreReady || !containerRef.current || !showFingerings) {
+      setFingeringMarkers([]);
+      return;
+    }
+    const container = containerRef.current;
+    let frame = 0;
+    let resizeTimer = 0;
+    const drawMarkers = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        setFingeringMarkers(buildFingeringMarkers(song, container, fingeringOctaveShift, pitchedSlotsRef.current));
+      });
+    };
+    const refreshAfterResize = () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(drawMarkers, 100);
+    };
+    drawMarkers();
+    window.addEventListener("resize", refreshAfterResize);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(resizeTimer);
+      window.removeEventListener("resize", refreshAfterResize);
+    };
+  }, [fingeringOctaveShift, renderRevision, scoreReady, showFingerings, song]);
+
+  useEffect(() => {
+    if (!scoreReady || !osmdRef.current) return;
+    if (highlight) osmdRef.current.cursor?.show();
+    else osmdRef.current.cursor?.hide();
+  }, [highlight, scoreReady]);
 
   useEffect(() => {
     if (!scoreReady || !highlight || !osmdRef.current) return;
@@ -761,15 +830,15 @@ function MelodyPlayer({
   return (
     <section className="melody-player">
       <div className="melody-actions">
-        <button className="primary" disabled={!canPlay || starting} onClick={() => void playPause()}>
+        <button className="primary melody-play-button" disabled={!canPlay || starting} onClick={() => void playPause()}>
           {playing ? <Pause size={17} /> : <Play size={17} />}
           {playing ? "Pausar melodia" : starting ? "Preparando" : "Tocar melodia"}
         </button>
-        <button disabled={!canPlay} onClick={reset}>
+        <button aria-label="Voltar ao início" className="melody-reset-button" disabled={!canPlay} onClick={reset} title="Voltar ao início">
           <RotateCcw size={17} />
-          Inicio
+          <span>Inicio</span>
         </button>
-        <label>
+        <label className="bpm-control">
           <Gauge size={17} />
           BPM
           <input
@@ -783,7 +852,7 @@ function MelodyPlayer({
             onChange={(event) => updateBpmInput(event.target.value)}
           />
         </label>
-        <label className="toggle">
+        <label className="toggle sound-toggle">
           <input type="checkbox" checked={noteSound} onChange={(event) => setNoteSound(event.target.checked)} />
           <Volume2 size={17} />
           Som
@@ -832,7 +901,7 @@ function Reader({
   const [scoreReady, setScoreReady] = useState(false);
   const [bpm, setBpm] = useState(clampNumber(song.defaultBpm, 30, 240, 100));
   const [bpmInput, setBpmInput] = useState(String(clampNumber(song.defaultBpm, 30, 240, 100)));
-  const [zoom, setZoom] = useState(1.55);
+  const [zoom, setZoom] = useState(initialReaderZoom);
   const [fingeringScale, setFingeringScale] = useState(1);
   const [railScale, setRailScale] = useState(1);
   const [positionBeat, setPositionBeat] = useState(0);
@@ -1125,72 +1194,90 @@ function Reader({
       </header>
 
       <div className="reader-controls">
-        <button className="primary" disabled={!playing && (!scoreReady || starting)} onClick={() => void playPause()}>
-          {playing ? <Pause size={18} /> : <Play size={18} />}
-          {playing ? "Pausar" : !scoreReady || starting ? "Preparando" : "Tocar"}
-        </button>
-        <button onClick={reset}>
-          <RotateCcw size={18} />
-          Inicio
-        </button>
-        <button onClick={() => jumpMeasure(-1)}>
-          <SkipBack size={18} />
-          Compasso
-        </button>
-        <label>
-          <Gauge size={18} />
-          BPM
-          <input
-            inputMode="numeric"
-            min="30"
-            max="240"
-            pattern="[0-9]*"
-            type="text"
-            value={bpmInput}
-            onBlur={commitBpmInput}
-            onChange={(event) => updateBpmInput(event.target.value)}
-          />
-        </label>
-        <button onClick={() => setZoom((value) => Math.max(0.9, value - 0.1))}>
-          <ZoomOut size={18} />
-          Menos zoom
-        </button>
-        <button onClick={() => setZoom((value) => Math.min(2.6, value + 0.1))}>
-          <ZoomIn size={18} />
-          Mais zoom
-        </button>
-        <SizeSlider label="Partitura" min={0.9} max={2.8} value={zoom} onChange={setZoom} />
-        <SizeSlider label="Números" min={0.7} max={2.2} value={fingeringScale} onChange={setFingeringScale} />
-        <SizeSlider label="Tablatura" min={0.75} max={2.1} value={railScale} onChange={setRailScale} />
-        <label className="toggle">
-          <input type="checkbox" checked={metronome} onChange={(event) => setMetronome(event.target.checked)} />
-          Metrônomo
-        </label>
-        <label className="toggle loop-toggle">
-          <input type="checkbox" checked={loopEnabled} onChange={(event) => setLoopEnabled(event.target.checked)} />
-          <Repeat size={18} />
-          Loop
-        </label>
-        <label className="toggle">
-          <input type="checkbox" checked={noteSound} onChange={(event) => setNoteSound(event.target.checked)} />
-          <Volume2 size={18} />
-          Som das notas
-        </label>
-        <div className="octave-control" aria-label="Controle de oitava do som">
-          <Music2 size={18} />
-          Oitava
-          <button type="button" onClick={() => setOctaveShift((value) => Math.max(-2, value - 1))}>-</button>
-          <strong>{octaveShiftLabel(octaveShift)}</strong>
-          <button type="button" onClick={() => setOctaveShift((value) => Math.min(2, value + 1))}>+</button>
+        <div className="reader-primary-controls">
+          <div className="reader-transport">
+            <button className="primary reader-play-button" disabled={!playing && (!scoreReady || starting)} onClick={() => void playPause()}>
+              {playing ? <Pause size={18} /> : <Play size={18} />}
+              {playing ? "Pausar" : !scoreReady || starting ? "Preparando" : "Tocar"}
+            </button>
+            <button aria-label="Voltar ao início" onClick={reset} title="Voltar ao início">
+              <RotateCcw size={18} />
+            </button>
+            <button aria-label="Compasso anterior" onClick={() => jumpMeasure(-1)} title="Compasso anterior">
+              <SkipBack size={18} />
+            </button>
+            <button aria-label="Próximo compasso" onClick={() => jumpMeasure(1)} title="Próximo compasso">
+              <SkipForward size={18} />
+            </button>
+          </div>
+          <div className="reader-quick-controls">
+            <label className="reader-bpm-control">
+              <Gauge size={18} />
+              BPM
+              <input
+                inputMode="numeric"
+                min="30"
+                max="240"
+                pattern="[0-9]*"
+                type="text"
+                value={bpmInput}
+                onBlur={commitBpmInput}
+                onChange={(event) => updateBpmInput(event.target.value)}
+              />
+            </label>
+            <button aria-label="Diminuir partitura" onClick={() => setZoom((value) => Math.max(0.8, value - 0.1))} title="Diminuir partitura">
+              <ZoomOut size={18} />
+            </button>
+            <button aria-label="Aumentar partitura" onClick={() => setZoom((value) => Math.min(2.6, value + 0.1))} title="Aumentar partitura">
+              <ZoomIn size={18} />
+            </button>
+          </div>
         </div>
-        <label>
-          Loop início
-          <input inputMode="numeric" pattern="[0-9]*" type="text" value={loopStart} onChange={(event) => updateLoopStart(event.target.value)} />
-        </label>
-        <label>
-          Loop fim
-          <input inputMode="numeric" pattern="[0-9]*" type="text" value={loopEnd} onChange={(event) => updateLoopEnd(event.target.value)} />
-        </label>
+        <details className="reader-more-controls">
+          <summary>
+            <SlidersHorizontal size={17} />
+            Ajustes
+            {loopEnabled && <span>Loop ligado</span>}
+          </summary>
+          <div className="reader-more-grid">
+            <SizeSlider label="Partitura" min={0.8} max={2.8} value={zoom} onChange={setZoom} />
+            <SizeSlider label="Números" min={0.7} max={2.2} value={fingeringScale} onChange={setFingeringScale} />
+            <SizeSlider label="Tablatura" min={0.75} max={2.1} value={railScale} onChange={setRailScale} />
+            <label className="toggle">
+              <input type="checkbox" checked={metronome} onChange={(event) => setMetronome(event.target.checked)} />
+              Metrônomo
+            </label>
+            <label className="toggle loop-toggle">
+              <input type="checkbox" checked={loopEnabled} onChange={(event) => setLoopEnabled(event.target.checked)} />
+              <Repeat size={18} />
+              Loop
+            </label>
+            <label className="toggle">
+              <input type="checkbox" checked={noteSound} onChange={(event) => setNoteSound(event.target.checked)} />
+              <Volume2 size={18} />
+              Som das notas
+            </label>
+            <div className="octave-control" aria-label="Controle de oitava do som">
+              <Music2 size={18} />
+              Oitava
+              <button type="button" onClick={() => setOctaveShift((value) => Math.max(-2, value - 1))}>-</button>
+              <strong>{octaveShiftLabel(octaveShift)}</strong>
+              <button type="button" onClick={() => setOctaveShift((value) => Math.min(2, value + 1))}>+</button>
+            </div>
+            {loopEnabled && (
+              <>
+                <label>
+                  Loop início
+                  <input inputMode="numeric" pattern="[0-9]*" type="text" value={loopStart} onChange={(event) => updateLoopStart(event.target.value)} />
+                </label>
+                <label>
+                  Loop fim
+                  <input inputMode="numeric" pattern="[0-9]*" type="text" value={loopEnd} onChange={(event) => updateLoopEnd(event.target.value)} />
+                </label>
+              </>
+            )}
+          </div>
+        </details>
       </div>
 
       <div className="reader-progress">
@@ -1502,6 +1589,29 @@ export function App() {
       </header>
 
       <section className="practice-strip" aria-label="Sequencia de treino do bloco">
+        <div className="practice-mobile">
+          <button aria-label="Música anterior" onClick={() => movePractice(-1)} title="Música anterior" type="button">
+            <SkipBack size={19} />
+          </button>
+          <button className="practice-mobile-current" onClick={() => setMusicMenuOpen(true)} type="button">
+            <span>{selectedPracticeNumber ? `${selectedPracticeNumber} de ${practiceEntries.length}` : "Repertório"}</span>
+            <strong>{selected?.title ?? "Escolher música"}</strong>
+          </button>
+          <button aria-label="Próxima música" onClick={() => movePractice(1)} title="Próxima música" type="button">
+            <SkipForward size={19} />
+          </button>
+          <button
+            aria-label="Abrir modo leitura"
+            className="primary practice-mobile-reader"
+            disabled={!playableSongData}
+            onClick={() => playableSongData ? setReaderOpen(true) : undefined}
+            title="Abrir modo leitura"
+            type="button"
+          >
+            <Play size={19} />
+            <span>Leitura</span>
+          </button>
+        </div>
         <div className="practice-head">
           <div>
             <strong>Treino do Bloco</strong>
@@ -1596,17 +1706,40 @@ export function App() {
                         <button className={viewMode === "score" ? "active" : ""} onClick={() => setViewMode("score")} type="button">Partitura</button>
                         <button className={viewMode === "notes" ? "active" : ""} disabled={!playableSongData} onClick={() => setViewMode("notes")} type="button">Notas e pistos</button>
                       </div>
-                      <button onClick={() => setZoom((value) => Math.max(0.8, value - 0.1))}>
-                        <ZoomOut size={17} />
-                        Menos zoom
-                      </button>
-                      <button onClick={() => setZoom((value) => Math.min(2.2, value + 0.1))}>
-                        <ZoomIn size={17} />
-                        Mais zoom
-                      </button>
-                      <SizeSlider label="Partitura" min={0.8} max={2.4} value={zoom} onChange={setZoom} />
-                      {playableSongData && showScore && <SizeSlider label="Números" min={0.7} max={2.2} value={homeFingeringScale} onChange={setHomeFingeringScale} />}
-                      {playableSongData && showNotes && <SizeSlider label="Tablatura" min={0.75} max={2.1} value={homeGuideScale} onChange={setHomeGuideScale} />}
+                      <div className="desktop-size-controls">
+                        <button onClick={() => setZoom((value) => Math.max(0.8, value - 0.1))} type="button">
+                          <ZoomOut size={17} />
+                          Menos zoom
+                        </button>
+                        <button onClick={() => setZoom((value) => Math.min(2.2, value + 0.1))} type="button">
+                          <ZoomIn size={17} />
+                          Mais zoom
+                        </button>
+                        <SizeSlider label="Partitura" min={0.8} max={2.4} value={zoom} onChange={setZoom} />
+                        {playableSongData && showScore && <SizeSlider label="Números" min={0.7} max={2.2} value={homeFingeringScale} onChange={setHomeFingeringScale} />}
+                        {playableSongData && showNotes && <SizeSlider label="Tablatura" min={0.75} max={2.1} value={homeGuideScale} onChange={setHomeGuideScale} />}
+                      </div>
+                      <details className="mobile-size-settings">
+                        <summary>
+                          <SlidersHorizontal size={17} />
+                          Tamanho
+                          <strong>{scalePercent(zoom)}</strong>
+                        </summary>
+                        <div className="mobile-size-grid">
+                          <div className="mobile-zoom-stepper">
+                            <button aria-label="Diminuir partitura" onClick={() => setZoom((value) => Math.max(0.8, value - 0.1))} title="Diminuir partitura" type="button">
+                              <ZoomOut size={18} />
+                            </button>
+                            <span>Partitura</span>
+                            <button aria-label="Aumentar partitura" onClick={() => setZoom((value) => Math.min(2.2, value + 0.1))} title="Aumentar partitura" type="button">
+                              <ZoomIn size={18} />
+                            </button>
+                          </div>
+                          <SizeSlider label="Partitura" min={0.8} max={2.4} value={zoom} onChange={setZoom} />
+                          {playableSongData && showScore && <SizeSlider label="Números" min={0.7} max={2.2} value={homeFingeringScale} onChange={setHomeFingeringScale} />}
+                          {playableSongData && showNotes && <SizeSlider label="Tablatura" min={0.75} max={2.1} value={homeGuideScale} onChange={setHomeGuideScale} />}
+                        </div>
+                      </details>
                     </>
                   )}
                   {playableSongData && (
