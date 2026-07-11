@@ -15,6 +15,7 @@ import {
   RotateCcw,
   Search,
   SkipBack,
+  SkipForward,
   Trash2,
   Upload,
   Volume2,
@@ -25,6 +26,22 @@ import type { Catalog, ScoreNote, Setlist, Song, SongData } from "./types";
 
 const catalogUrl = "/data/catalog.json";
 const setlistKey = "bloco-setlists-v1";
+const trainingSequence = [
+  { id: "baile-de-favela", label: "Baile de favela" },
+  { id: "meu-jeito-de-amar", label: "Meu Jeito de Amar" },
+  { id: "rap-da-felicidade", label: "Rap da Felicidade" },
+  { id: "malandramente", label: "Malandramente" },
+  { id: "vai-malandra", label: "Vai Malandra" },
+  { id: "lambafunk", label: "Lamba Funk" },
+  { id: "vira-de-ladinho", label: "Vira de Ladinho" },
+  { id: "rap-das-armas", label: "Rap das Armas" },
+  { id: "eu-vou-pro-baile-da-gaiola", label: "Baile da Gaiola" },
+  { id: "cheguei", label: "Cheguei" },
+  { id: "fala-mal-de-mim", label: "Fala Mal de Mim" },
+  { id: "morto-muito-louco", label: "Morto Muito Louco" },
+] as const;
+
+type ViewMode = "both" | "score" | "notes";
 
 function readSetlists(): Setlist[] {
   try {
@@ -532,6 +549,37 @@ function FullNoteGuide({
       </div>
     </section>
   );
+}
+
+function VisualScore({ song, zoom }: { song: SongData; zoom: number }) {
+  const visualWidth = `${Math.round(Math.max(1, zoom) * 100)}%`;
+  if (song.sourceImage) {
+    return (
+      <div className="visual-score-panel">
+        <img
+          alt={`Partitura de ${song.title}`}
+          className="visual-score-image"
+          src={`/${song.sourceImage}`}
+          style={{ width: visualWidth }}
+        />
+        <div className="transcription-note">Partitura visual. Ainda precisa transcrever para mostrar notas, pistos e tocar melodia.</div>
+      </div>
+    );
+  }
+  if (song.sourcePdf) {
+    return (
+      <div className="visual-score-panel">
+        <iframe
+          className="visual-score-pdf"
+          src={`/${song.sourcePdf}`}
+          style={{ width: visualWidth }}
+          title={`Partitura de ${song.title}`}
+        />
+        <div className="transcription-note">PDF visual. Ainda precisa transcrever para mostrar notas, pistos e tocar melodia.</div>
+      </div>
+    );
+  }
+  return <div className="transcription-note">Fonte ainda nao encontrada para esta musica.</div>;
 }
 
 function MelodyPlayer({
@@ -1332,21 +1380,37 @@ export function App() {
   const [homeGuideScale, setHomeGuideScale] = useState(1);
   const [homeSeekRequest, setHomeSeekRequest] = useState<{ beat: number; nonce: number } | null>(null);
   const [musicMenuOpen, setMusicMenuOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("both");
 
   const songs = catalog?.songs ?? [];
+  const practiceEntries = useMemo(
+    () =>
+      trainingSequence.map((entry, index) => ({
+        ...entry,
+        index,
+        song: songs.find((song) => song.id === entry.id) ?? null,
+      })),
+    [songs],
+  );
   const selected = songs.find((song) => song.id === selectedId) ?? songs[0] ?? null;
   const readyCount = songs.filter((song) => song.status === "ready").length;
   const transcriptionCount = songs.filter((song) => song.status === "needs_transcription" || song.status === "visual_only").length;
   const playableSongData = songData?.status === "ready" && songData.notes.length > 0 ? songData : null;
   const highlightedNotes = playableSongData ? activeNotesForBeat(playableSongData.notes, homeBeat) : [];
+  const selectedPracticeIndex = practiceEntries.findIndex((entry) => entry.song?.id === selected?.id);
+  const selectedPracticeNumber = selectedPracticeIndex >= 0 ? selectedPracticeIndex + 1 : null;
+  const practiceReadyCount = practiceEntries.filter((entry) => entry.song?.status === "ready").length;
+  const showScore = viewMode !== "notes";
+  const showNotes = viewMode !== "score";
 
   useEffect(() => {
     if (!selectedId && songs.length) {
       const songFromUrl = new URLSearchParams(window.location.search).get("song");
       const requested = songFromUrl ? songs.find((song) => song.id === songFromUrl) : null;
-      setSelectedId((requested ?? songs[0]).id);
+      const firstPracticeSong = practiceEntries.find((entry) => entry.song)?.song;
+      setSelectedId((requested ?? firstPracticeSong ?? songs[0]).id);
     }
-  }, [songs, selectedId]);
+  }, [practiceEntries, songs, selectedId]);
 
   useEffect(() => {
     if (!selected?.data) {
@@ -1369,6 +1433,10 @@ export function App() {
       cancelled = true;
     };
   }, [selected]);
+
+  useEffect(() => {
+    if (viewMode === "notes" && !playableSongData) setViewMode("both");
+  }, [playableSongData, viewMode]);
 
   const handleHomeBeatChange = useCallback((beat: number, playing: boolean) => {
     setHomeBeat(beat);
@@ -1395,6 +1463,24 @@ export function App() {
     setMusicMenuOpen(false);
   }
 
+  function choosePracticeSong(id: string) {
+    const entry = practiceEntries.find((item) => item.id === id);
+    if (entry?.song) chooseSong(entry.song.id);
+  }
+
+  function movePractice(delta: number) {
+    if (!practiceEntries.length) return;
+    const current = selectedPracticeIndex >= 0 ? selectedPracticeIndex : 0;
+    for (let offset = 1; offset <= practiceEntries.length; offset += 1) {
+      const nextIndex = (current + delta * offset + practiceEntries.length) % practiceEntries.length;
+      const nextSong = practiceEntries[nextIndex]?.song;
+      if (nextSong) {
+        chooseSong(nextSong.id);
+        return;
+      }
+    }
+  }
+
   if (error) return <main className="state">Erro: {error}</main>;
   if (!catalog) return <main className="state">Carregando repertório...</main>;
 
@@ -1414,6 +1500,49 @@ export function App() {
           </button>
         </div>
       </header>
+
+      <section className="practice-strip" aria-label="Sequencia de treino do bloco">
+        <div className="practice-head">
+          <div>
+            <strong>Treino do Bloco</strong>
+            <span>{practiceReadyCount} tocáveis de {practiceEntries.length} na sequência</span>
+          </div>
+          <div className="practice-nav">
+            <button onClick={() => movePractice(-1)} type="button">
+              <SkipBack size={17} />
+              Anterior
+            </button>
+            <button className="primary" onClick={() => playableSongData ? setReaderOpen(true) : undefined} disabled={!playableSongData} type="button">
+              <Play size={17} />
+              Leitura
+            </button>
+            <button onClick={() => movePractice(1)} type="button">
+              Próxima
+              <SkipForward size={17} />
+            </button>
+          </div>
+        </div>
+        <div className="practice-sequence">
+          {practiceEntries.map((entry) => {
+            const song = entry.song;
+            const active = song?.id === selected?.id;
+            const status = song?.status === "ready" ? "tocável" : song ? "visual" : "sem fonte";
+            return (
+              <button
+                className={`practice-song ${active ? "active" : ""}`}
+                disabled={!song}
+                key={entry.id}
+                onClick={() => choosePracticeSong(entry.id)}
+                type="button"
+              >
+                <span>{entry.index + 1}</span>
+                <strong>{entry.label}</strong>
+                <em className={`status-pill ${song ? songStatusClass(song) : "missing"}`}>{status}</em>
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
       <section className="layout">
         {musicMenuOpen && (
@@ -1456,12 +1585,17 @@ export function App() {
             <>
               <div className="score-toolbar">
                 <div>
-                  <h2>{selected.title}</h2>
+                  <h2>{selectedPracticeNumber ? `${selectedPracticeNumber}. ` : ""}{selected.title}</h2>
                   <p>{songStatusText(selected)}</p>
                 </div>
                 <div className="toolbar-actions">
-                  {playableSongData && (
+                  {songData && (
                     <>
+                      <div className="view-mode-control" aria-label="Modo de visualizacao">
+                        <button className={viewMode === "both" ? "active" : ""} onClick={() => setViewMode("both")} type="button">Tudo</button>
+                        <button className={viewMode === "score" ? "active" : ""} onClick={() => setViewMode("score")} type="button">Partitura</button>
+                        <button className={viewMode === "notes" ? "active" : ""} disabled={!playableSongData} onClick={() => setViewMode("notes")} type="button">Notas e pistos</button>
+                      </div>
                       <button onClick={() => setZoom((value) => Math.max(0.8, value - 0.1))}>
                         <ZoomOut size={17} />
                         Menos zoom
@@ -1471,8 +1605,12 @@ export function App() {
                         Mais zoom
                       </button>
                       <SizeSlider label="Partitura" min={0.8} max={2.4} value={zoom} onChange={setZoom} />
-                      <SizeSlider label="Números" min={0.7} max={2.2} value={homeFingeringScale} onChange={setHomeFingeringScale} />
-                      <SizeSlider label="Tablatura" min={0.75} max={2.1} value={homeGuideScale} onChange={setHomeGuideScale} />
+                      {playableSongData && showScore && <SizeSlider label="Números" min={0.7} max={2.2} value={homeFingeringScale} onChange={setHomeFingeringScale} />}
+                      {playableSongData && showNotes && <SizeSlider label="Tablatura" min={0.75} max={2.1} value={homeGuideScale} onChange={setHomeGuideScale} />}
+                    </>
+                  )}
+                  {playableSongData && (
+                    <>
                       <button className="primary" onClick={() => setReaderOpen(true)}>
                         <Play size={17} />
                         Modo leitura
@@ -1502,32 +1640,24 @@ export function App() {
                   seekRequest={homeSeekRequest}
                 />
               )}
-              <div className="score-panel">
-                {playableSongData ? (
-                  <ScoreView
-                    song={playableSongData}
-                    zoom={zoom}
-                    currentBeat={homePlaying ? highlightedNotes[0]?.absBeat ?? null : null}
-                    highlight={homePlaying}
-                    fingeringScale={homeFingeringScale}
-                    fingeringOctaveShift={homeOctaveShift}
-                    onNoteClick={seekHomeToNote}
-                  />
-                ) : songData?.sourceImage ? (
-                  <div className="visual-score-panel">
-                    <img alt={`Partitura de ${songData.title}`} className="visual-score-image" src={`/${songData.sourceImage}`} />
-                    <div className="transcription-note">Visual pronto. Melodia e pistos na partitura dependem de transcrição manual.</div>
-                  </div>
-                ) : songData?.sourcePdf ? (
-                  <div className="visual-score-panel">
-                    <iframe className="visual-score-pdf" src={`/${songData.sourcePdf}`} title={`Partitura de ${songData.title}`} />
-                    <div className="transcription-note">PDF pronto para leitura. Melodia e pistos na partitura dependem de transcrição manual.</div>
-                  </div>
-                ) : (
-                  <div className="transcription-note">Fonte ainda nao encontrada para esta musica.</div>
-                )}
-              </div>
-              {playableSongData && (
+              {showScore && songData && (
+                <div className="score-panel">
+                  {playableSongData ? (
+                    <ScoreView
+                      song={playableSongData}
+                      zoom={zoom}
+                      currentBeat={homePlaying ? highlightedNotes[0]?.absBeat ?? null : null}
+                      highlight={homePlaying}
+                      fingeringScale={homeFingeringScale}
+                      fingeringOctaveShift={homeOctaveShift}
+                      onNoteClick={seekHomeToNote}
+                    />
+                  ) : (
+                    <VisualScore song={songData} zoom={zoom} />
+                  )}
+                </div>
+              )}
+              {playableSongData && showNotes && (
                 <FullNoteGuide
                   notes={playableSongData.notes}
                   currentBeat={homePlaying ? highlightedNotes[0]?.absBeat ?? null : null}

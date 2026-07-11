@@ -1,0 +1,21 @@
+﻿{
+    "id":  "malandramente",
+    "title":  "Malandramente",
+    "folder":  "Malandramente-Sax Alto.pdf",
+    "status":  "needs_transcription",
+    "reason":  "fonte disponivel: Sax Alto; precisa adaptar/transcrever para trompete",
+    "musicxml":  null,
+    "audio":  null,
+    "fingeringsPdf":  null,
+    "sourceImage":  null,
+    "sourcePdf":  "sources/malandramente-sax-alto.pdf",
+    "data":  "data/songs/malandramente.json",
+    "defaultBpm":  100,
+    "trumpetPart":  "",
+    "totalMeasures":  0,
+    "totalBeats":  0,
+    "notesCount":  0,
+    "notes":  [
+
+              ]
+}
