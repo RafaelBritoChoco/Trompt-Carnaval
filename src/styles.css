@@ -1106,6 +1106,399 @@ th {
   font-size: calc(12px * var(--rail-scale, 1));
 }
 
+.music-menu-head > div,
+.editor-header-actions {
+  align-items: center;
+  display: flex;
+  gap: 7px;
+}
+
+.song-editor-layer {
+  background: #eef1f5;
+  inset: 0;
+  position: fixed;
+  z-index: 100;
+}
+
+.song-editor {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.editor-header {
+  align-items: center;
+  background: #ffffff;
+  border-bottom: 1px solid #ccd5e1;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  min-height: 64px;
+  padding: 8px max(14px, calc((100vw - 1520px) / 2));
+  z-index: 2;
+}
+
+.editor-header > div:nth-child(2) {
+  display: grid;
+  min-width: 0;
+}
+
+.editor-header > div:nth-child(2) span,
+.editor-selection-head span,
+.editor-section-title span {
+  color: #667085;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.editor-header > div:nth-child(2) strong {
+  font-size: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-header > em {
+  background: #fff0ce;
+  border-radius: 999px;
+  color: #805000;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+  padding: 4px 8px;
+}
+
+.editor-back {
+  justify-content: center;
+  min-width: 40px;
+  padding: 6px;
+}
+
+.editor-body {
+  align-items: start;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(310px, 380px) minmax(0, 1fr);
+  margin: 0 auto;
+  max-width: 1520px;
+  overflow-y: auto;
+  padding: 10px;
+  width: 100%;
+}
+
+.editor-metadata,
+.editor-compose,
+.editor-timeline,
+.editor-preview {
+  background: #ffffff;
+  border: 1px solid #d6dee9;
+  border-radius: 8px;
+  min-width: 0;
+}
+
+.editor-metadata {
+  align-items: end;
+  display: grid;
+  gap: 9px;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(220px, 1fr) 110px minmax(300px, 1.2fr) auto;
+  padding: 10px;
+}
+
+.editor-metadata label,
+.editor-import label {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.editor-metadata label > span,
+.editor-note-options > div > span,
+.editor-duration-control > span {
+  color: #4d5b70;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.editor-metadata input,
+.editor-metadata select {
+  background: #ffffff;
+  border: 1px solid #bfc9d7;
+  border-radius: 5px;
+  min-height: 40px;
+  min-width: 0;
+  padding: 6px 9px;
+  width: 100%;
+}
+
+.editor-import {
+  align-items: end;
+  display: grid;
+  gap: 7px;
+  grid-template-columns: minmax(170px, 1fr) auto;
+  min-width: 0;
+}
+
+.editor-message {
+  color: #176b47;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 0 4px 8px;
+}
+
+.editor-compose {
+  display: grid;
+  gap: 12px;
+  grid-row: span 2;
+  padding: 12px;
+  position: sticky;
+  top: 0;
+}
+
+.editor-selection-head,
+.editor-section-title {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.editor-selection-head > div:first-child,
+.editor-section-title > div {
+  display: grid;
+  gap: 2px;
+}
+
+.editor-selection-head strong {
+  font-size: 25px;
+}
+
+.editor-section-title strong {
+  font-size: 16px;
+}
+
+.editor-kind-control {
+  background: #edf1f6;
+  border: 1px solid #d0d8e4;
+  border-radius: 6px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+}
+
+.editor-kind-control button,
+.editor-duration-control button {
+  border-color: transparent;
+  justify-content: center;
+}
+
+.editor-kind-control button.active,
+.editor-duration-control button.active {
+  background: #1f6f6a;
+  color: #ffffff;
+}
+
+.editor-pitch-grid {
+  display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.editor-pitch-grid button {
+  align-content: center;
+  display: grid;
+  gap: 1px;
+  justify-items: center;
+  min-height: 54px;
+  min-width: 0;
+  padding: 5px;
+}
+
+.editor-pitch-grid button.accidental {
+  background: #303846;
+  border-color: #303846;
+  color: #ffffff;
+}
+
+.editor-pitch-grid button.active {
+  background: #dff8ea;
+  border-color: #10935f;
+  box-shadow: inset 0 0 0 2px rgba(16, 147, 95, 0.18);
+  color: #075b37;
+}
+
+.editor-pitch-grid button.accidental.active {
+  background: #146c5a;
+  border-color: #0a5948;
+  color: #ffffff;
+}
+
+.editor-pitch-grid small {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.editor-note-options {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: minmax(0, 1fr) minmax(72px, 0.55fr);
+}
+
+.editor-octave-control,
+.editor-valves,
+.editor-duration-control {
+  align-items: center;
+  background: #f7f9fb;
+  border: 1px solid #d8e0ea;
+  border-radius: 6px;
+  display: grid;
+  gap: 6px;
+  min-height: 48px;
+  padding: 6px 8px;
+}
+
+.editor-octave-control {
+  grid-template-columns: minmax(0, 1fr) 36px 30px 36px;
+}
+
+.editor-octave-control button {
+  justify-content: center;
+  min-height: 34px;
+  padding: 4px;
+}
+
+.editor-octave-control strong,
+.editor-valves strong {
+  font-size: 20px;
+  text-align: center;
+}
+
+.editor-valves {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.editor-valves strong {
+  color: #c90000;
+}
+
+.editor-duration-control {
+  grid-column: 1 / -1;
+}
+
+.editor-duration-control > div {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.editor-duration-control button {
+  min-width: 0;
+  padding: 5px 3px;
+}
+
+.editor-add-actions {
+  display: grid;
+  gap: 5px;
+  grid-template-columns: auto auto minmax(0, 1fr) 38px 38px 38px 38px;
+}
+
+.editor-add-actions button {
+  justify-content: center;
+  min-width: 0;
+}
+
+.danger-icon,
+.editor-delete-song {
+  color: #a51d2a;
+}
+
+.editor-timeline,
+.editor-preview {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.editor-measures {
+  display: flex;
+  gap: 8px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 2px 0 7px;
+  scrollbar-color: #a7b5c8 transparent;
+}
+
+.editor-measure {
+  border-left: 3px solid #9eacc0;
+  display: grid;
+  flex: 0 0 auto;
+  gap: 4px;
+  padding-left: 6px;
+}
+
+.editor-measure > span {
+  color: #667085;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.editor-measure > div {
+  display: flex;
+  gap: 4px;
+}
+
+.editor-measure button {
+  align-content: center;
+  display: grid;
+  gap: 1px;
+  justify-items: center;
+  min-height: 58px;
+  min-width: 66px;
+  padding: 4px 6px;
+}
+
+.editor-measure button.rest {
+  background: #f1f4f8;
+  color: #526078;
+}
+
+.editor-measure button.selected {
+  background: #dff8ea;
+  border-color: #10935f;
+  box-shadow: inset 0 0 0 2px rgba(16, 147, 95, 0.18);
+}
+
+.editor-measure button small,
+.editor-measure button em {
+  color: #667085;
+  font-size: 10px;
+  font-style: normal;
+}
+
+.editor-empty {
+  background: #f5f7fa;
+  border: 1px dashed #b9c4d2;
+  border-radius: 6px;
+  color: #667085;
+  padding: 18px;
+  text-align: center;
+}
+
+.editor-preview .melody-player {
+  padding: 8px;
+}
+
+.editor-score {
+  border: 1px solid #dce3ec;
+  border-radius: 6px;
+  height: clamp(300px, 46vh, 620px);
+  overflow: auto;
+  padding: 6px;
+}
+
 @media (max-width: 1180px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);
@@ -1695,6 +2088,178 @@ th {
   .note-chip .fingering,
   .note-chip .note-name {
     font-size: calc(14px * var(--rail-scale, 1));
+  }
+
+  .create-song-button {
+    justify-content: center;
+    min-height: 40px;
+    padding: 6px 9px;
+  }
+
+  .create-song-button span {
+    display: none;
+  }
+
+  .music-menu-head > div {
+    gap: 4px;
+  }
+
+  .music-menu-head > div button {
+    min-height: 34px;
+    padding: 5px 7px;
+  }
+
+  .editor-header {
+    gap: 6px;
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+    min-height: 54px;
+    padding: 5px 6px;
+  }
+
+  .editor-header > div:nth-child(2) strong {
+    font-size: 16px;
+  }
+
+  .editor-header > div:nth-child(2) span {
+    font-size: 9px;
+  }
+
+  .editor-header > em {
+    display: none;
+  }
+
+  .editor-header-actions {
+    gap: 4px;
+  }
+
+  .editor-header-actions button {
+    justify-content: center;
+    min-height: 40px;
+    padding: 5px 7px;
+  }
+
+  .editor-header-actions button:first-child span {
+    display: none;
+  }
+
+  .editor-body {
+    display: grid;
+    gap: 6px;
+    grid-template-columns: minmax(0, 1fr);
+    padding: 6px;
+  }
+
+  .editor-metadata,
+  .editor-compose,
+  .editor-timeline,
+  .editor-preview {
+    border-radius: 6px;
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .editor-metadata {
+    align-items: end;
+    gap: 6px;
+    grid-template-columns: minmax(0, 1fr) 84px;
+    padding: 8px;
+  }
+
+  .editor-import {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .editor-message {
+    grid-column: 1 / -1;
+    padding: 2px;
+  }
+
+  .editor-compose {
+    gap: 8px;
+    padding: 8px;
+    position: static;
+  }
+
+  .editor-selection-head strong {
+    font-size: 21px;
+  }
+
+  .editor-kind-control button {
+    min-height: 34px;
+    padding: 4px 7px;
+  }
+
+  .editor-pitch-grid {
+    gap: 4px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .editor-pitch-grid button {
+    min-height: 48px;
+    padding: 3px;
+  }
+
+  .editor-note-options {
+    gap: 5px;
+  }
+
+  .editor-octave-control,
+  .editor-valves,
+  .editor-duration-control {
+    min-height: 44px;
+    padding: 5px;
+  }
+
+  .editor-duration-control button {
+    min-height: 36px;
+  }
+
+  .editor-add-actions {
+    grid-template-columns: repeat(4, minmax(38px, 1fr));
+  }
+
+  .editor-add-actions > button:nth-child(1),
+  .editor-add-actions > button:nth-child(2) {
+    grid-column: span 2;
+  }
+
+  .editor-add-actions > span {
+    display: none;
+  }
+
+  .editor-timeline,
+  .editor-preview {
+    gap: 7px;
+    padding: 8px;
+  }
+
+  .editor-delete-song {
+    font-size: 0;
+    justify-content: center;
+    min-width: 38px;
+    padding: 5px;
+  }
+
+  .editor-delete-song svg {
+    height: 17px;
+    width: 17px;
+  }
+
+  .editor-measure button {
+    min-height: 54px;
+    min-width: 62px;
+  }
+
+  .editor-preview .melody-player {
+    position: static;
+  }
+
+  .editor-score {
+    height: auto;
+    min-height: 230px;
+    overflow-x: hidden;
+    padding: 3px;
   }
 }
 

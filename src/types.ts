@@ -10,6 +10,7 @@ export type ScoreNote = {
   labelPt: string;
   fingering: Fingering;
   tie: "start" | "stop" | "continue" | null;
+  eventId?: string;
 };
 
 export type Song = {
@@ -29,10 +30,12 @@ export type Song = {
   totalMeasures: number;
   totalBeats: number;
   notesCount: number;
+  userCreated?: boolean;
 };
 
 export type SongData = Song & {
   notes: ScoreNote[];
+  musicxmlText?: string;
 };
 
 export type Catalog = {

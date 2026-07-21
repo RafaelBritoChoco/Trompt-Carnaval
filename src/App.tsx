@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { OpenSheetMusicDisplay as OpenSheetMusicDisplayInstance } from "opensheetmusicdisplay";
 import {
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
   Download,
+  Edit3,
   FileMusic,
   FolderPlus,
   Gauge,
@@ -13,6 +18,7 @@ import {
   Play,
   Plus,
   RotateCcw,
+  Save,
   Search,
   SlidersHorizontal,
   SkipBack,
@@ -24,9 +30,32 @@ import {
   ZoomOut,
 } from "lucide-react";
 import type { Catalog, ScoreNote, Setlist, Song, SongData } from "./types";
+import {
+  cloneDraft,
+  createEditorEvent,
+  createEmptyDraft,
+  downloadDraftMusicXml,
+  draftFromSongData,
+  draftToSongData,
+  editorDurations,
+  editorFingering,
+  editorPitchLabel,
+  editorPitches,
+  eventMeasure,
+  eventStartBeat,
+  parseEditorPitch,
+  readUserSongs,
+  userSongSummary,
+  withEditorOctave,
+  withEditorPitchClass,
+  writeUserSongs,
+  type EditorEvent,
+  type UserSongDraft,
+} from "./songEditor";
 
 const catalogUrl = "/data/catalog.json";
 const setlistKey = "bloco-setlists-v1";
+const emptyCatalogSongs: Song[] = [];
 const audioLeadSeconds = 0.035;
 const audioLookAheadSeconds = 0.12;
 
@@ -323,6 +352,7 @@ function buildFingeringMarkers(song: SongData, scoreElement: HTMLElement, octave
 }
 
 function songStatusText(song: Song) {
+  if (song.userCreated) return `${song.notesCount} notas | criada aqui`;
   if (song.status === "ready") return `${song.notesCount} notas | toca melodia`;
   if (song.status === "needs_transcription") return song.sourceImage || song.sourcePdf ? "visual | transcrever notas" : "MSCZ | exportar MusicXML";
   if (song.status === "visual_only") return "visual";
@@ -385,13 +415,13 @@ function ScoreView({
   useEffect(() => {
     let cancelled = false;
     async function renderScore() {
-      if (!containerRef.current || !song.musicxml) return;
+      if (!containerRef.current || (!song.musicxml && !song.musicxmlText)) return;
       setScoreReady(false);
       setFingeringMarkers([]);
       onReady?.(false);
       const [{ CursorType, OpenSheetMusicDisplay }, xml] = await Promise.all([
         import("opensheetmusicdisplay"),
-        fetch(`/${song.musicxml}`).then((res) => res.text()),
+        song.musicxmlText ? Promise.resolve(song.musicxmlText) : fetch(`/${song.musicxml}`).then((res) => res.text()),
       ]);
       if (cancelled || !containerRef.current) return;
       containerRef.current.innerHTML = "";
@@ -435,7 +465,7 @@ function ScoreView({
     return () => {
       cancelled = true;
     };
-  }, [song.id, song.musicxml, onReady]);
+  }, [song.id, song.musicxml, song.musicxmlText, onReady]);
 
   useEffect(() => {
     if (!scoreReady || !osmdRef.current || renderedZoomRef.current === zoom) return;
@@ -679,12 +709,14 @@ function MelodyPlayer({
   octaveShift,
   onOctaveShiftChange,
   seekRequest,
+  onBpmChange,
 }: {
   song: SongData;
   onBeatChange: (beat: number, playing: boolean) => void;
   octaveShift: number;
   onOctaveShiftChange: (value: number) => void;
   seekRequest?: { beat: number; nonce: number } | null;
+  onBpmChange?: (value: number) => void;
 }) {
   const audioContextRef = useRef<AudioContext | null>(null);
   const playbackStartTimeRef = useRef(0);
@@ -847,6 +879,7 @@ function MelodyPlayer({
     const committed = clampNumber(next, 30, 240, safeBpm);
     setBpm(committed);
     setBpmInput(String(Math.round(committed)));
+    onBpmChange?.(committed);
   }
 
   async function playPause() {
@@ -1547,8 +1580,354 @@ function GroupsPanel({
   );
 }
 
+function SongEditor({
+  initialDraft,
+  availableSongs,
+  loadSong,
+  saved,
+  onSave,
+  onDelete,
+  onClose,
+}: {
+  initialDraft: UserSongDraft;
+  availableSongs: Song[];
+  loadSong: (id: string) => Promise<SongData | null>;
+  saved: boolean;
+  onSave: (draft: UserSongDraft) => void;
+  onDelete: (id: string) => void;
+  onClose: () => void;
+}) {
+  const [draft, setDraft] = useState(() => cloneDraft(initialDraft));
+  const [renderDraft, setRenderDraft] = useState(() => cloneDraft(initialDraft));
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(initialDraft.events[0]?.id ?? null);
+  const [insertWritten, setInsertWritten] = useState("C5");
+  const [insertDuration, setInsertDuration] = useState(1);
+  const [previewBeat, setPreviewBeat] = useState(0);
+  const [previewPlaying, setPreviewPlaying] = useState(false);
+  const [previewOctaveShift, setPreviewOctaveShift] = useState(0);
+  const [previewSeek, setPreviewSeek] = useState<{ beat: number; nonce: number } | null>(null);
+  const importableSongs = useMemo(() => availableSongs.filter((song) => song.status === "ready" && song.notesCount > 0), [availableSongs]);
+  const [importId, setImportId] = useState(importableSongs[0]?.id ?? "");
+  const [importing, setImporting] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const selectedEvent = draft.events.find((event) => event.id === selectedEventId) ?? null;
+  const activeWritten = selectedEvent?.kind === "note" ? selectedEvent.written ?? "C5" : insertWritten;
+  const activePitch = parseEditorPitch(activeWritten) ?? parseEditorPitch("C5")!;
+  const activeDuration = selectedEvent?.durationBeats ?? insertDuration;
+  const previewSong = useMemo(() => draftToSongData(renderDraft), [renderDraft]);
+  const selectedBeat = selectedEventId ? eventStartBeat(draft.events, selectedEventId) : 0;
+  const activePreviewBeat = previewPlaying ? previewBeat : selectedBeat;
+  const timelineMeasures = useMemo(() => {
+    const result = new Map<number, Array<{ event: EditorEvent; beat: number }>>();
+    let beat = 0;
+    draft.events.forEach((event) => {
+      const measure = Math.floor(beat / draft.beatsPerMeasure) + 1;
+      const entries = result.get(measure) ?? [];
+      entries.push({ event, beat: (beat % draft.beatsPerMeasure) + 1 });
+      result.set(measure, entries);
+      beat += event.durationBeats;
+    });
+    return Array.from(result.entries());
+  }, [draft.beatsPerMeasure, draft.events]);
+  const handlePreviewBeatChange = useCallback((beat: number, playing: boolean) => {
+    setPreviewBeat(beat);
+    setPreviewPlaying(playing);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setRenderDraft(cloneDraft(draft)), 140);
+    return () => window.clearTimeout(timer);
+  }, [draft]);
+
+  function changeDraft(update: (current: UserSongDraft) => UserSongDraft) {
+    setDraft((current) => ({ ...update(current), updatedAt: new Date().toISOString() }));
+    setDirty(true);
+    setMessage("");
+  }
+
+  function updateEvent(eventId: string, update: (event: EditorEvent) => EditorEvent) {
+    changeDraft((current) => ({
+      ...current,
+      events: current.events.map((event) => event.id === eventId ? update(event) : event),
+    }));
+  }
+
+  function addEvent(kind: "note" | "rest") {
+    const event = createEditorEvent(kind, insertWritten, insertDuration);
+    changeDraft((current) => {
+      const selectedIndex = current.events.findIndex((item) => item.id === selectedEventId);
+      const insertIndex = selectedIndex >= 0 ? selectedIndex + 1 : current.events.length;
+      const events = [...current.events];
+      events.splice(insertIndex, 0, event);
+      return { ...current, events };
+    });
+    setSelectedEventId(event.id);
+  }
+
+  function setPitchClass(pitchClass: string) {
+    const written = withEditorPitchClass(activeWritten, pitchClass);
+    setInsertWritten(written);
+    if (selectedEvent) updateEvent(selectedEvent.id, (event) => ({ ...event, kind: "note", written }));
+  }
+
+  function setPitchOctave(octave: number) {
+    const written = withEditorOctave(activeWritten, octave);
+    setInsertWritten(written);
+    if (selectedEvent) updateEvent(selectedEvent.id, (event) => ({ ...event, kind: "note", written }));
+  }
+
+  function setDuration(durationBeats: number) {
+    setInsertDuration(durationBeats);
+    if (selectedEvent) updateEvent(selectedEvent.id, (event) => ({ ...event, durationBeats }));
+  }
+
+  function setSelectedKind(kind: "note" | "rest") {
+    if (!selectedEvent) return;
+    updateEvent(selectedEvent.id, (event) => ({ ...event, kind, written: kind === "note" ? event.written ?? insertWritten : undefined }));
+  }
+
+  function moveSelected(delta: number) {
+    if (!selectedEventId) return;
+    changeDraft((current) => {
+      const index = current.events.findIndex((event) => event.id === selectedEventId);
+      const target = index + delta;
+      if (index < 0 || target < 0 || target >= current.events.length) return current;
+      const events = [...current.events];
+      [events[index], events[target]] = [events[target], events[index]];
+      return { ...current, events };
+    });
+  }
+
+  function duplicateSelected() {
+    if (!selectedEvent) return;
+    const copy = { ...selectedEvent, id: createEditorEvent(selectedEvent.kind, selectedEvent.written, selectedEvent.durationBeats).id };
+    changeDraft((current) => {
+      const index = current.events.findIndex((event) => event.id === selectedEvent.id);
+      const events = [...current.events];
+      events.splice(index + 1, 0, copy);
+      return { ...current, events };
+    });
+    setSelectedEventId(copy.id);
+  }
+
+  function deleteSelected() {
+    if (!selectedEventId) return;
+    const index = draft.events.findIndex((event) => event.id === selectedEventId);
+    const nextId = draft.events[index + 1]?.id ?? draft.events[index - 1]?.id ?? null;
+    changeDraft((current) => ({ ...current, events: current.events.filter((event) => event.id !== selectedEventId) }));
+    setSelectedEventId(nextId);
+  }
+
+  async function importSong() {
+    if (!importId || importing) return;
+    setImporting(true);
+    setMessage("");
+    try {
+      const source = await loadSong(importId);
+      if (!source) throw new Error("Não foi possível abrir a música.");
+      const imported = draftFromSongData(source);
+      setDraft(imported);
+      setRenderDraft(imported);
+      setSelectedEventId(imported.events[0]?.id ?? null);
+      setDirty(true);
+      setMessage(`${source.title} importada como cópia.`);
+    } catch (importError) {
+      setMessage(importError instanceof Error ? importError.message : "Falha ao importar música.");
+    } finally {
+      setImporting(false);
+    }
+  }
+
+  function saveDraft() {
+    const next = {
+      ...draft,
+      title: draft.title.trim() || "Minha música",
+      defaultBpm: Math.round(clampNumber(draft.defaultBpm, 30, 240, 100)),
+      updatedAt: new Date().toISOString(),
+    };
+    setDraft(next);
+    setRenderDraft(next);
+    onSave(next);
+    setDirty(false);
+    setMessage("Música salva neste navegador.");
+  }
+
+  function closeEditor() {
+    if (dirty && !window.confirm("Fechar sem salvar as alterações?")) return;
+    onClose();
+  }
+
+  function selectFromScore(note: ScoreNote) {
+    if (!note.eventId) return;
+    setSelectedEventId(note.eventId);
+    setPreviewSeek({ beat: note.absBeat, nonce: Date.now() });
+  }
+
+  return (
+    <div className="song-editor-layer">
+      <section className="song-editor" aria-label="Editor de música">
+        <header className="editor-header">
+          <button aria-label="Fechar editor" className="editor-back" onClick={closeEditor} title="Fechar editor" type="button">
+            <ArrowLeft size={20} />
+          </button>
+          <div>
+            <span>{saved ? "EDITAR MÚSICA" : "NOVA MÚSICA"}</span>
+            <strong>{draft.title.trim() || "Sem título"}</strong>
+          </div>
+          {dirty && <em>não salvo</em>}
+          <div className="editor-header-actions">
+            <button onClick={() => downloadDraftMusicXml(draft)} title="Baixar MusicXML" type="button">
+              <Download size={18} />
+              <span>MusicXML</span>
+            </button>
+            <button className="primary" onClick={saveDraft} type="button">
+              <Save size={18} />
+              Salvar
+            </button>
+          </div>
+        </header>
+
+        <div className="editor-body">
+          <section className="editor-metadata">
+            <label className="editor-title-field">
+              <span>Nome da música</span>
+              <input value={draft.title} onChange={(event) => changeDraft((current) => ({ ...current, title: event.target.value }))} />
+            </label>
+            <label>
+              <span>Compasso</span>
+              <select value={draft.beatsPerMeasure} onChange={(event) => changeDraft((current) => ({ ...current, beatsPerMeasure: Number(event.target.value) as 2 | 3 | 4 }))}>
+                <option value="2">2/4</option>
+                <option value="3">3/4</option>
+                <option value="4">4/4</option>
+              </select>
+            </label>
+            <div className="editor-import">
+              <label>
+                <span>Importar do repertório</span>
+                <select value={importId} onChange={(event) => setImportId(event.target.value)}>
+                  {importableSongs.map((song) => <option key={song.id} value={song.id}>{song.title}</option>)}
+                </select>
+              </label>
+              <button disabled={!importId || importing} onClick={() => void importSong()} type="button">
+                <Upload size={17} />
+                {importing ? "Importando" : "Criar cópia"}
+              </button>
+            </div>
+            {message && <output className="editor-message">{message}</output>}
+          </section>
+
+          <section className="editor-compose">
+            <div className="editor-selection-head">
+              <div>
+                <span>{selectedEvent ? `COMPASSO ${eventMeasure(draft.events, selectedEvent.id, draft.beatsPerMeasure)}` : "PRÓXIMO EVENTO"}</span>
+                <strong>{selectedEvent?.kind === "rest" ? "Pausa" : editorPitchLabel(activeWritten)}</strong>
+              </div>
+              <div className="editor-kind-control" aria-label="Tipo do evento">
+                <button aria-pressed={selectedEvent?.kind !== "rest"} className={selectedEvent?.kind !== "rest" ? "active" : ""} disabled={!selectedEvent} onClick={() => setSelectedKind("note")} type="button">Nota</button>
+                <button aria-pressed={selectedEvent?.kind === "rest"} className={selectedEvent?.kind === "rest" ? "active" : ""} disabled={!selectedEvent} onClick={() => setSelectedKind("rest")} type="button">Pausa</button>
+              </div>
+            </div>
+
+            <div className="editor-pitch-grid" aria-label="Altura da nota">
+              {editorPitches.map((pitch) => (
+                <button
+                  aria-pressed={activePitch.pitchClass === pitch.value}
+                  className={`${pitch.value.includes("#") || pitch.value.includes("b") ? "accidental" : ""} ${activePitch.pitchClass === pitch.value ? "active" : ""}`}
+                  key={pitch.value}
+                  onClick={() => setPitchClass(pitch.value)}
+                  type="button"
+                >
+                  <strong>{pitch.label}</strong>
+                  <small>{pitch.value}</small>
+                </button>
+              ))}
+            </div>
+
+            <div className="editor-note-options">
+              <div className="editor-octave-control">
+                <span>Oitava</span>
+                <button aria-label="Oitava abaixo" disabled={activePitch.octave <= 3} onClick={() => setPitchOctave(activePitch.octave - 1)} title="Oitava abaixo" type="button">-</button>
+                <strong>{activePitch.octave}</strong>
+                <button aria-label="Oitava acima" disabled={activePitch.octave >= 6} onClick={() => setPitchOctave(activePitch.octave + 1)} title="Oitava acima" type="button">+</button>
+              </div>
+              <div className="editor-valves">
+                <span>Pistos</span>
+                <strong>{editorFingering(activeWritten).join("/")}</strong>
+              </div>
+              <div className="editor-duration-control">
+                <span>Duração</span>
+                <div>
+                  {editorDurations.map((duration) => (
+                    <button aria-label={`${duration.value} tempo, ${duration.name}`} aria-pressed={activeDuration === duration.value} className={activeDuration === duration.value ? "active" : ""} key={duration.value} onClick={() => setDuration(duration.value)} title={duration.name} type="button">
+                      {duration.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="editor-add-actions">
+              <button className="primary" onClick={() => addEvent("note")} type="button"><Plus size={18} />Adicionar nota</button>
+              <button onClick={() => addEvent("rest")} type="button"><Plus size={18} />Adicionar pausa</button>
+              <span />
+              <button aria-label="Mover para esquerda" disabled={!selectedEvent} onClick={() => moveSelected(-1)} title="Mover para esquerda" type="button"><ChevronLeft size={18} /></button>
+              <button aria-label="Mover para direita" disabled={!selectedEvent} onClick={() => moveSelected(1)} title="Mover para direita" type="button"><ChevronRight size={18} /></button>
+              <button aria-label="Duplicar" disabled={!selectedEvent} onClick={duplicateSelected} title="Duplicar" type="button"><Copy size={18} /></button>
+              <button aria-label="Excluir" className="danger-icon" disabled={!selectedEvent} onClick={deleteSelected} title="Excluir" type="button"><Trash2 size={18} /></button>
+            </div>
+          </section>
+
+          <section className="editor-timeline" aria-label="Sequência da música">
+            <div className="editor-section-title">
+              <div><span>SEQUÊNCIA</span><strong>{draft.events.length} eventos · {previewSong.totalMeasures} compassos</strong></div>
+              {saved && <button className="editor-delete-song" onClick={() => onDelete(draft.id)} type="button"><Trash2 size={16} />Excluir música</button>}
+            </div>
+            {timelineMeasures.length ? (
+              <div className="editor-measures">
+                {timelineMeasures.map(([measure, events]) => (
+                  <div className="editor-measure" key={measure}>
+                    <span>c.{measure}</span>
+                    <div>
+                      {events.map(({ event, beat }) => (
+                        <button aria-pressed={event.id === selectedEventId} className={`${event.kind} ${event.id === selectedEventId ? "selected" : ""}`} key={event.id} onClick={() => {
+                          setSelectedEventId(event.id);
+                          setPreviewSeek({ beat: eventStartBeat(draft.events, event.id), nonce: Date.now() });
+                        }} type="button">
+                          <small>{beat}</small><strong>{event.kind === "rest" ? "Pausa" : editorPitchLabel(event.written ?? "C5")}</strong><em>{event.durationBeats}t</em>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : <div className="editor-empty">Nenhuma nota ou pausa.</div>}
+          </section>
+
+          <section className="editor-preview">
+            <div className="editor-section-title"><div><span>TESTAR E CONFERIR</span><strong>Partitura com pistos</strong></div></div>
+            <MelodyPlayer
+              song={previewSong}
+              onBeatChange={handlePreviewBeatChange}
+              octaveShift={previewOctaveShift}
+              onOctaveShiftChange={setPreviewOctaveShift}
+              seekRequest={previewSeek}
+              onBpmChange={(value) => changeDraft((current) => ({ ...current, defaultBpm: value }))}
+            />
+            <div className="editor-score">
+              <ScoreView song={previewSong} zoom={1.05} currentBeat={activePreviewBeat} highlight={previewSong.notes.length > 0} fingeringScale={1} onNoteClick={selectFromScore} />
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export function App() {
   const { catalog, error } = useCatalog();
+  const [userSongs, setUserSongs] = useState<UserSongDraft[]>(readUserSongs);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [songData, setSongData] = useState<SongData | null>(null);
@@ -1562,8 +1941,11 @@ export function App() {
   const [homeSeekRequest, setHomeSeekRequest] = useState<{ beat: number; nonce: number } | null>(null);
   const [musicMenuOpen, setMusicMenuOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("both");
+  const [editorDraft, setEditorDraft] = useState<UserSongDraft | null>(null);
 
-  const songs = catalog?.songs ?? [];
+  const catalogSongs = catalog?.songs ?? emptyCatalogSongs;
+  const userSongSummaries = useMemo(() => userSongs.map(userSongSummary), [userSongs]);
+  const songs = useMemo(() => [...userSongSummaries, ...catalogSongs], [catalogSongs, userSongSummaries]);
   const practiceEntries = useMemo(
     () =>
       trainingSequence.map((entry, index) => ({
@@ -1584,14 +1966,26 @@ export function App() {
   const showScore = viewMode !== "notes";
   const showNotes = viewMode !== "score";
 
+  useEffect(() => writeUserSongs(userSongs), [userSongs]);
+
+  const loadSongById = useCallback(async (id: string) => {
+    const localDraft = userSongs.find((draft) => draft.id === id);
+    if (localDraft) return draftToSongData(localDraft);
+    const catalogSong = catalogSongs.find((song) => song.id === id);
+    if (!catalogSong?.data) return null;
+    const response = await fetch(`/${catalogSong.data}`);
+    if (!response.ok) throw new Error(`Falha ao abrir ${catalogSong.title}.`);
+    return response.json() as Promise<SongData>;
+  }, [catalogSongs, userSongs]);
+
   useEffect(() => {
-    if (!selectedId && songs.length) {
+    if (catalog && !selectedId && songs.length) {
       const songFromUrl = new URLSearchParams(window.location.search).get("song");
       const requested = songFromUrl ? songs.find((song) => song.id === songFromUrl) : null;
       const firstPracticeSong = practiceEntries.find((entry) => entry.song)?.song;
       setSelectedId((requested ?? firstPracticeSong ?? songs[0]).id);
     }
-  }, [practiceEntries, songs, selectedId]);
+  }, [catalog, practiceEntries, songs, selectedId]);
 
   useEffect(() => {
     if (!selected?.data) {
@@ -1604,8 +1998,7 @@ export function App() {
     setHomePlaying(false);
     setHomeOctaveShift(0);
     setHomeSeekRequest(null);
-    fetch(`/${selected.data}`)
-      .then((res) => res.json())
+    loadSongById(selected.id)
       .then((data) => {
         if (!cancelled) setSongData(data);
       })
@@ -1613,7 +2006,7 @@ export function App() {
     return () => {
       cancelled = true;
     };
-  }, [selected]);
+  }, [loadSongById, selected]);
 
   useEffect(() => {
     if (viewMode === "notes" && !playableSongData) setViewMode("both");
@@ -1662,11 +2055,44 @@ export function App() {
     }
   }
 
+  function saveUserSong(draft: UserSongDraft) {
+    setUserSongs((current) => {
+      const exists = current.some((song) => song.id === draft.id);
+      return exists ? current.map((song) => song.id === draft.id ? cloneDraft(draft) : song) : [cloneDraft(draft), ...current];
+    });
+    setSelectedId(draft.id);
+    setMusicMenuOpen(false);
+  }
+
+  function deleteUserSong(id: string) {
+    if (!window.confirm("Excluir esta música criada?")) return;
+    setUserSongs((current) => current.filter((song) => song.id !== id));
+    setEditorDraft(null);
+    if (selectedId === id) setSelectedId(practiceEntries.find((entry) => entry.song)?.song?.id ?? catalogSongs[0]?.id ?? null);
+  }
+
+  function editSelectedSong() {
+    if (!selected || !songData) return;
+    const localDraft = userSongs.find((draft) => draft.id === selected.id);
+    setEditorDraft(localDraft ? cloneDraft(localDraft) : draftFromSongData(songData));
+  }
+
   if (error) return <main className="state">Erro: {error}</main>;
   if (!catalog) return <main className="state">Carregando repertório...</main>;
 
   return (
     <main className="app">
+      {editorDraft && (
+        <SongEditor
+          initialDraft={editorDraft}
+          availableSongs={songs}
+          loadSong={loadSongById}
+          saved={userSongs.some((song) => song.id === editorDraft.id)}
+          onSave={saveUserSong}
+          onDelete={deleteUserSong}
+          onClose={() => setEditorDraft(null)}
+        />
+      )}
       {readerOpen && playableSongData && <Reader song={playableSongData} onClose={() => setReaderOpen(false)} />}
       <header className="topbar">
         <div>
@@ -1674,6 +2100,10 @@ export function App() {
           <p>{readyCount} músicas tocáveis, {transcriptionCount} para transcrever</p>
         </div>
         <div className="topbar-actions">
+          <button aria-label="Criar música" className="primary create-song-button" onClick={() => setEditorDraft(createEmptyDraft())} title="Criar música" type="button">
+            <Edit3 size={18} />
+            <span>Criar música</span>
+          </button>
           <button className="music-menu-button" onClick={() => setMusicMenuOpen(true)} type="button">
             <ListMusic size={18} />
             Músicas
@@ -1754,7 +2184,10 @@ export function App() {
             <aside className="song-list music-menu-panel" onClick={(event) => event.stopPropagation()}>
               <div className="music-menu-head">
                 <strong>Escolher música</strong>
-                <button onClick={() => setMusicMenuOpen(false)} type="button">Fechar</button>
+                <div>
+                  <button className="primary" onClick={() => { setMusicMenuOpen(false); setEditorDraft(createEmptyDraft()); }} type="button"><Plus size={16} />Criar</button>
+                  <button onClick={() => setMusicMenuOpen(false)} type="button">Fechar</button>
+                </div>
               </div>
               <div className="search">
                 <Search size={18} />
@@ -1841,6 +2274,10 @@ export function App() {
                       <button className="primary" onClick={() => setReaderOpen(true)}>
                         <Play size={17} />
                         Modo leitura
+                      </button>
+                      <button onClick={editSelectedSong} type="button">
+                        <Edit3 size={17} />
+                        {selected.userCreated ? "Editar" : "Editar cópia"}
                       </button>
                     </>
                   )}
